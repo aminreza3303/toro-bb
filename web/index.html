@@ -8,24 +8,24 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" id="brand-home" href="#storefront-title" aria-label="صفحهٔ کالاهای ترب‌بیزینس"><span class="brand-logo-panel"><img src="/brand/torob-business-logo.png" alt="ترب‌بیزینس"></span><div><strong>ترب‌بیزینس</strong><small>خرید سازمانی قابل‌ردیابی</small></div></a>
-    <div class="topbar-actions"><div class="dataset-badge"><span class="dot"></span><span>دموی مستقل · دادهٔ ساختگی</span><span id="snapshot-label">snapshot در حال بارگذاری…</span></div><button id="theme-toggle" class="theme-toggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☾</button></div>
+    <a class="brand" id="brand-home" href="#business-title" aria-label="صفحهٔ خرید سازمانی ترب‌بیزینس"><span class="brand-logo-panel"><img src="/brand/torob-business-logo.png" alt="ترب‌بیزینس"></span><div><strong>ترب‌بیزینس</strong><small>خرید سازمانی قابل‌ردیابی</small></div></a>
+    <div class="topbar-actions"><div class="dataset-badge"><span class="dot"></span><span>نسخهٔ آزمایشی · مقایسهٔ پیشنهادها</span><span id="snapshot-label">snapshot در حال بارگذاری…</span></div><button id="theme-toggle" class="theme-toggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☾</button></div>
   </header>
   <nav class="site-nav" aria-label="بخش‌های دمو"><div class="site-nav-inner">
-    <button type="button" class="nav-link active" data-view="storefront" aria-current="page">کالاها</button>
+    <button type="button" class="nav-link active" data-view="business" aria-current="page">خرید سازمانی</button>
+    <button type="button" class="nav-link" data-view="storefront">کالاها</button>
     <button type="button" class="nav-link" data-view="workflow">فهرست خرید <span id="request-count" class="nav-count">۰</span></button>
-    <button type="button" class="nav-link" data-view="business">خرید سازمانی</button>
     <span class="nav-note">مقایسهٔ پیشنهادها، بدون سفارش واقعی</span>
   </div></nav>
   <main class="shell">
-    <section id="storefront-view" aria-labelledby="storefront-title">
+    <section id="storefront-view" hidden aria-labelledby="storefront-title">
       <div class="storefront-hero">
         <div class="storefront-copy">
           <p class="eyebrow">بازار آزمایشی خرید کسب‌وکار</p>
           <h1 id="storefront-title">خرید چندقلمی را از <span>کالای درست</span> شروع کن.</h1>
           <p>کالاهای استاندارد اداری و IT را ببین، تعداد موردنیاز را به فهرست اضافه کن و بعد ترکیب پیشنهادهای فروشندگان را با بودجه و زمان تحویل مقایسه کن.</p>
           <div class="storefront-actions"><button type="button" id="start-demo" class="button button-primary">اجرای سناریوی نمونه</button><button type="button" class="button button-ghost" data-view="business">آشنایی با خرید سازمانی</button></div>
-          <p class="demo-caveat">این ویترین فقط از دادهٔ ساختگی محلی استفاده می‌کند؛ خرید و ثبت‌نام واقعی ندارد.</p>
+          <p class="demo-caveat">این ویترین برای مقایسه طراحی شده است؛ خرید و ثبت‌نام واقعی ندارد.</p>
         </div>
         <div class="storefront-visual" aria-hidden="true"><div class="visual-sheet"><span>فهرست خرید</span><strong>۰۲ قلم</strong><i></i><i></i><i></i></div><div class="visual-tag">قیمت · زمان · منشأ</div></div>
       </div>
@@ -41,18 +41,17 @@
       <section class="storefront-benefits" aria-label="مزیت‌های دمو"><article><span>۱</span><h3>فهرست چندقلمی</h3><p>چند کالا را در یک درخواست کنار هم بررسی کنید.</p></article><article><span>۲</span><h3>قیمت قابل‌مقایسه</h3><p>بسته‌بندی، تعداد و ارسال در جمع کل لحاظ می‌شوند.</p></article><article><span>۳</span><h3>تصمیم قابل‌ردیابی</h3><p>منشأ هر پیشنهاد و دلیل رتبه‌بندی را ببینید.</p></article></section>
     </section>
 
-    <section id="business-view" class="business-view" hidden aria-labelledby="business-title">
-      <div class="business-hero"><p class="eyebrow">مسیر خرید سازمانی</p><h1 id="business-title">از انتخاب کالا تا مقایسهٔ تأمین‌کننده‌ها</h1><p>برای تیم‌های خرید، فروشگاه‌های کوچک و شرکت‌ها: فهرست چندقلمی بسازید، سقف بودجه و زمان را مشخص کنید و پیشنهادها را برای تصمیم انسانی کنار هم ببینید.</p><button type="button" class="button button-primary" id="business-start">ساخت فهرست خرید</button></div>
-      <div class="business-capabilities"><article><b>کاتالوگ یکسان‌شده</b><p>نام‌های متفاوت یک کالا به شناسهٔ مشترک وصل می‌شوند.</p></article><article><b>فیلتر شرایط</b><p>بودجه، تحویل، موجودی و وضعیت فاکتور اعلام‌شده بررسی می‌شوند.</p></article><article><b>چند فروشنده</b><p>ترکیب کامل اقلام از پیشنهادهای چند فروشنده رتبه‌بندی می‌شود.</p></article><article><b>منشأ شفاف</b><p>متن خام، قیمت و گام‌های نرمال‌سازی در دسترس‌اند.</p></article></div>
+    <section id="business-view" class="business-view" aria-labelledby="business-title">
+      <div class="business-hero"><p class="eyebrow">خرید سازمانی از چند منبع</p><h1 id="business-title">برای سازمانت از چند جا قیمت بگیر.</h1><p>فهرست خریدت را یک‌جا بنویس؛ ترب‌بیزینس پیشنهادهای چند تأمین‌کننده را کنار هم می‌آورد تا قیمت، بسته‌بندی، زمان تحویل و شرایط فاکتور را در یک نگاه مقایسه کنی.</p><button type="button" class="button button-primary" id="business-start">ساخت فهرست خرید</button></div>
+      <div class="business-capabilities"><article><b>جمع‌آوری قیمت</b><p>برای هر قلم، پیشنهادهای چند فروشنده را در یک مسیر ببین.</p></article><article><b>مقایسهٔ یک‌جا</b><p>قیمت بسته، تعداد، تحویل و حداقل خرید را کنار هم بخوان.</p></article><article><b>فهرست مشترک</b><p>چند قلم از لوازم اداری تا تجهیزات IT را در یک درخواست جمع کن.</p></article><article><b>منشأ روشن</b><p>ببین هر عدد و پیشنهاد از کدام رکورد و snapshot آمده است.</p></article></div>
       <div class="business-paths"><div><p class="eyebrow">ورود کسب‌وکارها</p><h2>دو مسیر برای نسخهٔ واقعی</h2><p>ثبت شرکت و پروانهٔ کسب دو شیوهٔ رایج شناسایی کسب‌وکارند. این دمو احراز هویت، دریافت مدارک و ثبت‌نام فعال ندارد.</p></div><article><strong>شرکت ثبت‌شده</strong><p>نمایهٔ حقوقی، کاربران تیم خرید و مسیر پیش‌فاکتور می‌تواند در نسخهٔ عملیاتی افزوده شود.</p><span>در برنامهٔ محصول</span></article><article><strong>دارندهٔ پروانهٔ کسب</strong><p>مسیر سبک‌تر برای کسب‌وکارهای کوچک، با همان مقایسهٔ شفاف پیشنهادها.</p><span>در برنامهٔ محصول</span></article></div>
     </section>
 
     <div id="workflow-view" hidden>
     <section class="hero" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">RFQ چندقلمی · پیشنهاد برای بررسی انسانی</p>
         <h1 id="page-title">فهرست خریدت را وارد کن،<br><em>ترکیب قابل‌بررسی بساز.</em></h1>
-        <p class="lede">پیشنهادها از یک snapshot محلی و ساختگی رتبه‌بندی می‌شوند. قیمت زنده، سفارش و پرداخت در این دمو وجود ندارد.</p>
+        <p class="lede">قیمت، زمان تحویل و شرایط چند تأمین‌کننده را کنار هم ببین. قیمت زنده، سفارش و پرداخت در این نسخه وجود ندارد.</p>
       </div>
       <aside class="snapshot-card" aria-label="اطلاعات مجموعه داده"><span class="mini-label">مجموعه فعال</span><strong id="dataset-name">در حال خواندن…</strong><div class="snapshot-meta" id="dataset-meta">—</div></aside>
     </section>
@@ -82,7 +81,7 @@
     <section id="results-view" hidden aria-labelledby="results-title"><div class="results-header"><div><p class="eyebrow">نتیجهٔ اجرای قطعی</p><h2 id="results-title">ترکیب‌های پیشنهادی</h2><p id="results-subtitle" class="helper"></p></div><div class="result-actions"><div class="intent-switch" role="group" aria-label="اولویت رتبه‌بندی"><button type="button" data-preference="lowest_cost" class="intent-button active">کمترین هزینه</button><button type="button" data-preference="fastest_delivery" class="intent-button">سریع‌ترین تحویل</button></div><button id="edit-request" class="button button-ghost" type="button">ویرایش درخواست</button></div></div><div id="result-summary" class="result-summary"></div><div id="results" class="results-list"></div><div id="uncovered" class="uncovered" hidden></div></section>
     </div>
   </main>
-  <footer><span>ترب‌بیزینس · نمونه‌کار مستقل و غیررسمی</span><span>قیمت‌ها و فروشنده‌ها ساختگی‌اند · <span id="footer-snapshot">—</span></span></footer>
+  <footer><span>ترب‌بیزینس · نمونه‌کار مستقل و غیررسمی</span><span>پیشنهادها برای مقایسه‌اند و قابل سفارش نیستند · <span id="footer-snapshot">—</span></span></footer>
   <dialog id="provenance-dialog" class="provenance"><div class="dialog-head"><h2>منشأ پیشنهاد</h2><button id="close-dialog" class="icon-button" aria-label="بستن">×</button></div><div id="provenance-content"></div></dialog>
   <dialog id="product-dialog" class="product-dialog" aria-labelledby="product-dialog-title"><div class="dialog-head"><h2 id="product-dialog-title">جزئیات کالا</h2><button id="close-product-dialog" class="icon-button" type="button" aria-label="بستن">×</button></div><div id="product-dialog-content"></div></dialog>
   <script src="app.js" defer></script>
