@@ -75,3 +75,10 @@ body{background:var(--neutral);color:var(--on-surface);font-family:"IBM Plex San
 @media(max-width:780px){.brand-symbol-panel{width:50px;height:50px;flex-basis:50px}.brand-symbol-panel img{width:44px;height:44px}}
 .product-visual img{display:block;width:auto;height:auto;max-width:78%;max-height:116px;object-fit:contain}
 .product-visual-it img{max-width:58%;max-height:118px}
+
+/* Thiings' 3D icons make the landing capabilities scannable without replacing their text labels. */
+.business-capability img{display:block;width:76px;height:76px;margin:0 0 13px;object-fit:contain;border-radius:var(--radius-md);background:var(--soft-surface);padding:7px}
+.business-capability b{display:block}
+.asset-credit{color:var(--secondary);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.asset-credit:hover{color:var(--tertiary)}
+@media(max-width:600px){.business-capability img{width:64px;height:64px}}

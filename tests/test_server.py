@@ -143,6 +143,11 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(content_type, "image/svg+xml")
         self.assertIn(b"<svg", image[:500])
+        for icon_name in ("shopping-cart", "discount-tag", "pricelist", "warehouse"):
+            status, content_type, image = self.raw_request("GET", f"/landing-icons/{icon_name}.png")
+            self.assertEqual(status, 200)
+            self.assertEqual(content_type, "image/png")
+            self.assertTrue(image.startswith(b"\x89PNG\r\n\x1a\n"))
         status, error = self.request("GET", "/brand/other.png")
         self.assertEqual(status, 404)
         self.assertEqual(error["error"]["code"], "NOT_FOUND")

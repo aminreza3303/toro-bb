@@ -33,6 +33,10 @@ _STATIC_TYPES = {
     "catalog/ballpen.svg": "image/svg+xml",
     "catalog/stack-of-papers.svg": "image/svg+xml",
     "catalog/computer-mouse.svg": "image/svg+xml",
+    "landing-icons/shopping-cart.png": "image/png",
+    "landing-icons/discount-tag.png": "image/png",
+    "landing-icons/pricelist.png": "image/png",
+    "landing-icons/warehouse.png": "image/png",
 }
 
 
