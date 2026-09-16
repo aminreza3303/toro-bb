@@ -68,3 +68,8 @@ body{background:var(--neutral);color:var(--on-surface);font-family:"IBM Plex San
 .clear-search{position:absolute;left:8px;width:42px;height:42px;border:0;border-radius:var(--radius-md);background:transparent;color:var(--secondary);font-size:24px;line-height:1}
 .clear-search:hover{background:var(--soft-surface);color:var(--primary)}
 @media(max-width:850px){.catalog-search{min-width:0}.catalog-search input{height:58px}}
+
+/* The supplied square mark is used as the compact brand lockup and favicon. */
+.brand-symbol-panel{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 1px 0 color-mix(in srgb,var(--primary) 12%,transparent)}
+.brand-symbol-panel img{display:block;width:48px;height:48px;max-width:100%;object-fit:contain;transform:none}
+@media(max-width:780px){.brand-symbol-panel{width:50px;height:50px;flex-basis:50px}.brand-symbol-panel img{width:44px;height:44px}}

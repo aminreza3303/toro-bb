@@ -29,6 +29,7 @@ _STATIC_TYPES = {
     "styles.css": "text/css; charset=utf-8",
     "fonts/Vazirmatn.ttf": "font/ttf",
     "brand/torob-business-logo.png": "image/png",
+    "brand/torob-business-symbol.png": "image/png",
 }
 
 
