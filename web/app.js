@@ -56,7 +56,12 @@ function addCatalogItemToRequest(item, qty=1){
   const count=state.lines.filter(entry=>entry.query.trim()).length;
   notice(count<2?`${item.name} به فهرست خرید اضافه شد. برای مقایسه، دست‌کم یک قلم دیگر هم وارد کنید.`:`${item.name} به فهرست خرید اضافه شد. تعداد و شرایط را بررسی کنید.`);
 }
-function productVisual(item){const name=item.name||'';if(item.id?.startsWith('paper'))return 'A4';if(item.id?.startsWith('mouse'))return '⌁';return name.includes('۰.۷')||name.includes('0.7')?'۰٫۷':'✎';}
+function productVisual(item){
+  const asset=item.id?.startsWith('paper')?'/catalog/stack-of-papers.svg':item.id?.startsWith('mouse')?'/catalog/computer-mouse.svg':'/catalog/ballpen.svg';
+  const visual=el('div',{className:`product-visual ${item.category==='تجهیزات IT'?'product-visual-it':''}`});
+  visual.append(el('img',{src:asset,alt:item.name||'تصویر کالا',loading:'lazy'}));
+  return visual;
+}
 function cardPrice(item){const price=item.lowest_package_price_irr??item.min_package_price_irr??item.lowest_offer_price_irr;return price==null?'قیمت ثبت نشده':money(price);}
 function renderCategoryFilters(){
   const root=$('#category-filters');const categories=['all',...new Set(shop.items.map(item=>item.category).filter(Boolean))];
@@ -69,7 +74,7 @@ function renderCatalog(){
   const grid=$('#product-grid');grid.replaceChildren();
   items.forEach(item=>{
     const card=el('article',{className:'product-card'});
-    card.append(el('div',{className:`product-visual ${item.category==='تجهیزات IT'?'product-visual-it':''}`,text:productVisual(item)}));
+    card.append(productVisual(item));
     const info=el('div',{className:'product-info'},[el('span',{className:'product-category',text:item.category||'کالا'}),el('h3',{text:item.name}),el('p',{text:`${fa(item.offer_count??item.accepted_offer_count??0)} پیشنهاد پذیرفته‌شده · واحد: ${item.base_unit||'عدد'}`})]);
     const price=el('div',{className:'product-price'},[el('small',{text:'کمترین قیمت بسته'}),el('strong',{text:cardPrice(item)})]);
     const actions=el('div',{className:'product-actions'});

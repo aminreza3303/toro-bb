@@ -30,6 +30,9 @@ _STATIC_TYPES = {
     "fonts/Vazirmatn.ttf": "font/ttf",
     "brand/torob-business-logo.png": "image/png",
     "brand/torob-business-symbol.png": "image/png",
+    "catalog/ballpen.svg": "image/svg+xml",
+    "catalog/stack-of-papers.svg": "image/svg+xml",
+    "catalog/computer-mouse.svg": "image/svg+xml",
 }
 
 

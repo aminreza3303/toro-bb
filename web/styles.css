@@ -73,3 +73,5 @@ body{background:var(--neutral);color:var(--on-surface);font-family:"IBM Plex San
 .brand-symbol-panel{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 1px 0 color-mix(in srgb,var(--primary) 12%,transparent)}
 .brand-symbol-panel img{display:block;width:48px;height:48px;max-width:100%;object-fit:contain;transform:none}
 @media(max-width:780px){.brand-symbol-panel{width:50px;height:50px;flex-basis:50px}.brand-symbol-panel img{width:44px;height:44px}}
+.product-visual img{display:block;width:auto;height:auto;max-width:78%;max-height:116px;object-fit:contain}
+.product-visual-it img{max-width:58%;max-height:118px}

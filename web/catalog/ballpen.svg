@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    id="svg2"
+    sodipodi:docname="pen-ball.svg"
+    inkscape:export-filename="/home/chaunce/Documents/runeman.org/clipart/pen-ball.png"
+    viewBox="0 0 327.72 480.96"
+    inkscape:export-xdpi="28.068892"
+    version="1.1"
+    inkscape:export-ydpi="28.068892"
+    inkscape:version="0.48.4 r9939"
+  >
+  <title
+      id="title3795"
+    >Ballpoint Pen</title
+  >
+  <defs
+      id="defs4"
+    >
+    <filter
+        id="filter3833"
+        height="1.201"
+        width="1.0439"
+        color-interpolation-filters="sRGB"
+        y="-.1005"
+        x="-.021927"
+        inkscape:collect="always"
+      >
+      <feGaussianBlur
+          id="feGaussianBlur3835"
+          stdDeviation="0.5025"
+          inkscape:collect="always"
+      />
+    </filter
+    >
+    <filter
+        id="filter3851"
+        inkscape:collect="always"
+        color-interpolation-filters="sRGB"
+      >
+      <feGaussianBlur
+          id="feGaussianBlur3853"
+          stdDeviation="0.31"
+          inkscape:collect="always"
+      />
+    </filter
+    >
+    <filter
+        id="filter3873"
+        height="1.3"
+        width="1.075"
+        color-interpolation-filters="sRGB"
+        y="-0.15"
+        x="-0.0375"
+        inkscape:collect="always"
+      >
+      <feGaussianBlur
+          id="feGaussianBlur3875"
+          stdDeviation="0.3125"
+          inkscape:collect="always"
+      />
+    </filter
+    >
+    <filter
+        id="filter4039"
+        height="2.8024"
+        width="1.0286"
+        color-interpolation-filters="sRGB"
+        y="-.90119"
+        x="-.014282"
+        inkscape:collect="always"
+      >
+      <feGaussianBlur
+          id="feGaussianBlur4041"
+          stdDeviation="1.8774867"
+          inkscape:collect="always"
+      />
+    </filter
+    >
+  </defs
+  >
+  <sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      inkscape:window-y="28"
+      fit-margin-left="0"
+      pagecolor="#ffffff"
+      fit-margin-top="0"
+      inkscape:window-maximized="1"
+      inkscape:zoom="1"
+      inkscape:window-x="-3"
+      inkscape:window-height="717"
+      showgrid="false"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="278.89034"
+      inkscape:cy="252.93957"
+      fit-margin-right="0"
+      fit-margin-bottom="0"
+      inkscape:window-width="1366"
+      inkscape:pageopacity="0.0"
+      inkscape:document-units="px"
+    >
+    <inkscape:grid
+        id="grid2985"
+        originy="-349.49876px"
+        enabled="true"
+        originx="-164.31199px"
+        visible="true"
+        snapvisiblegridlinesonly="true"
+        type="xygrid"
+        empspacing="5"
+    />
+  </sodipodi:namedview
+  >
+  <g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(-164.31 -221.9)"
+    >
+    <g
+        id="g4079"
+        transform="matrix(.55808 -.82979 .82979 .55808 -235.6 474.52)"
+      >
+      <path
+          id="path2995"
+          sodipodi:rx="2.5"
+          sodipodi:ry="2.5"
+          style="color:#000000;fill:#999999"
+          sodipodi:type="arc"
+          d="m600 489.86c0 1.3807-1.1193 2.5-2.5 2.5s-2.5-1.1193-2.5-2.5 1.1193-2.5 2.5-2.5 2.5 1.1193 2.5 2.5z"
+          transform="matrix(-1.3226 0 0 1 828.05 -30)"
+          sodipodi:cy="489.86218"
+          sodipodi:cx="597.5"
+      />
+      <path
+          id="path2987"
+          d="m37.608 456.96h19.574v5.8002h-19.574z"
+          sodipodi:nodetypes="ccccc"
+          style="stroke:#000000;stroke-width:.22980px;fill:#cccccc"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path2989"
+          d="m39.46 456.36v7l72.742 14v-35z"
+          sodipodi:nodetypes="ccccc"
+          style="stroke:#000000;stroke-width:.28751;fill:#ffd42a"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path2991"
+          d="m112.2 442.36h443.07v35h-443.07z"
+          style="stroke:#000000;stroke-width:.28751;fill:#407faa"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path2997"
+          style="filter:url(#filter4039);fill:#ffffff"
+          inkscape:connector-curvature="0"
+          transform="matrix(-1.3615 0 0 .97862 854.82 6.794)"
+          d="m224.5 447.36h315.5v5h-315.5z"
+      />
+      <path
+          id="path2993"
+          d="m555.27 444.36h-443.07v5h443.07z"
+          style="fill:#ffffff"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3779"
+          d="m555.27 442.36c8.8172 0.33333 17.634 2 26.452 5v25c-10.509 3.5855-19.468 5.4132-26.452 5z"
+          sodipodi:nodetypes="ccccc"
+          style="stroke:#000000;stroke-width:.28751;fill:#ffd42a"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3781"
+          d="m581.72 452.36h26.452v15h-26.452z"
+          style="stroke:#000000;stroke-width:.57502;fill:#e6e6e6"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3783"
+          d="m606.52 454.36h-24.798v5h24.798z"
+          style="fill:#ffffff"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3787"
+          d="m568.49 443.86s-16.594-11.5-26.452-11.5h-119.03c-5.88 1.4539-8.9702 3.4042 0 7.5 5.9212 2.0922 12.171 3.1917 19.839 0l6.6129-2.5h85.968c6.9706 0 19.839 5 19.839 5z"
+          sodipodi:nodetypes="csccccscc"
+          style="stroke:#000000;stroke-width:.57502;fill:#808080"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3837"
+          style="filter:url(#filter3851);fill:#ffff00"
+          d="m588.25 453.36c-6-5-15-8.8284-20-8.8284v5c5 0 13.896 4.9102 20 8.8284z"
+          sodipodi:nodetypes="ccccc"
+          inkscape:connector-curvature="0"
+          transform="matrix(1.3226 0 0 1 -196.29 0)"
+      />
+      <path
+          id="path3855"
+          style="filter:url(#filter3873);fill:#ffffff"
+          inkscape:connector-curvature="0"
+          transform="matrix(1.1996 0 0 .73077 -124.01 122.13)"
+          d="m608.25 454.36h-20v5h20z"
+      />
+      <path
+          id="path3789"
+          d="m581.72 454.07c-7.9355-5.2493-19.839-9.6398-26.452-9.6398v5.2493c6.6129 0 18.379 5.5262 26.452 9.6398z"
+          sodipodi:nodetypes="ccccc"
+          style="fill:#ffff00"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path3823"
+          style="filter:url(#filter3833);fill:#ffffff"
+          d="m233.25 444.89-55 12.475v2l55-9.4749z"
+          sodipodi:nodetypes="ccccc"
+          inkscape:connector-curvature="0"
+          transform="matrix(1.3226 0 0 1 -196.29 0)"
+      />
+      <path
+          id="path3791"
+          d="m112.2 444.18-72.742 13.182v2l72.742-10.182z"
+          sodipodi:nodetypes="ccccc"
+          style="fill:#ffffff"
+          inkscape:connector-curvature="0"
+      />
+      <path
+          id="path4043"
+          d="m422.03 433.02h122.61"
+          style="stroke:#ffffff;stroke-width:1.0346px;fill:none"
+          inkscape:connector-curvature="0"
+      />
+    </g
+    >
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>
