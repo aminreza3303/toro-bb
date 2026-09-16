@@ -101,9 +101,9 @@ async function openProduct(id){
 document.addEventListener('DOMContentLoaded',()=>{
   $$('[data-view]').forEach(button=>button.addEventListener('click',()=>showMainView(button.dataset.view)));
   $('#brand-home').addEventListener('click',event=>{event.preventDefault();showMainView('business');});
-  $('#catalog-query').addEventListener('input',event=>{shop.query=event.target.value;renderCatalog();});
+  $('#catalog-query').addEventListener('input',event=>{shop.query=event.target.value;$('#clear-catalog-query').hidden=!event.target.value;renderCatalog();});
+  $('#clear-catalog-query').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';$('#clear-catalog-query').hidden=true;renderCatalog();$('#catalog-query').focus();});
   $('#clear-catalog-search').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';shop.category='all';renderCategoryFilters();renderCatalog();$('#catalog-query').focus();});
-  $('#start-demo').addEventListener('click',()=>{state.lines=[];state.lineSeq=0;addLine('خودکار آبی 0.7','13');addLine('ماوس USB مدل M100','2');showMainView('workflow');});
   $('#business-start').addEventListener('click',()=>showMainView('workflow'));
   $('#close-product-dialog').addEventListener('click',()=>$('#product-dialog').close());
   $('#product-dialog').addEventListener('click',event=>{if(event.target.id==='product-dialog')event.target.close();});
