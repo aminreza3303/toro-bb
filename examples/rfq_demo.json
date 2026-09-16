@@ -1,0 +1,10 @@
+{
+  "lines": [
+    {"id": "line-pen", "query_text": "خودکار آبی ۰٫۷", "qty_base": 13},
+    {"id": "line-mouse", "query_text": "ماوس باسیم M100", "qty_base": 2}
+  ],
+  "preference": "lowest_cost",
+  "budget_irr": null,
+  "max_lead_days": null,
+  "requires_declared_invoice": false
+}

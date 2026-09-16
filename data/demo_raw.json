@@ -1,0 +1,159 @@
+{
+  "id": "demo-v1",
+  "version": "1.0.0",
+  "captured_at": "2026-09-16T08:00:00Z",
+  "kind": "synthetic",
+  "rules_version": "normalize-v1",
+  "catalog": [
+    {
+      "id": "pen-blue-07",
+      "category": "لوازم اداری",
+      "name": "خودکار آبی 0.7",
+      "aliases": ["خودکار 0.7 آبی", "blue pen 0.7", "خودکار 0.7"],
+      "base_unit": "عدد",
+      "specs": {"color": "blue", "tip_mm": "0.7"},
+      "spec_markers": {"color": ["آبی", "blue"], "tip_mm": ["0.7", "۰٫۷"]}
+    },
+    {
+      "id": "pen-black-07",
+      "category": "لوازم اداری",
+      "name": "خودکار مشکی 0.7",
+      "aliases": ["خودکار 0.7 مشکی", "black pen 0.7", "خودکار 0.7"],
+      "base_unit": "عدد",
+      "specs": {"color": "black", "tip_mm": "0.7"},
+      "spec_markers": {"color": ["مشکی", "black"], "tip_mm": ["0.7", "۰٫۷"]}
+    },
+    {
+      "id": "paper-a4-80",
+      "category": "لوازم اداری",
+      "name": "کاغذ A4 80 گرم",
+      "aliases": ["کاغذ A4 80gr", "A4 80gsm"],
+      "base_unit": "بسته ۵۰۰ برگی",
+      "specs": {"size": "A4", "weight_gsm": 80, "sheets_per_ream": 500}
+    },
+    {
+      "id": "mouse-usb-m100",
+      "category": "تجهیزات IT",
+      "name": "ماوس USB مدل M100",
+      "aliases": ["mouse usb m100", "ماوس باسیم M100"],
+      "base_unit": "عدد",
+      "specs": {"connection": "wired_usb", "model": "M100"},
+      "spec_markers": {"connection": ["باسیم", "با سیم", "wired"], "model": ["M100"]}
+    },
+    {
+      "id": "mouse-wireless-m200",
+      "category": "تجهیزات IT",
+      "name": "ماوس بی سیم مدل M200",
+      "aliases": ["mouse wireless m200", "ماوس بیسیم M200"],
+      "base_unit": "عدد",
+      "specs": {"connection": "wireless", "model": "M200"},
+      "spec_markers": {"connection": ["بی سیم", "بیسیم", "wireless"], "model": ["M200"]}
+    }
+  ],
+  "vendors": [
+    {"id": "v-budget", "name": "آزمایشی اقتصاد", "synthetic": true, "shipping_irr": 20000, "minimum_order_irr": 0},
+    {"id": "v-fast", "name": "آزمایشی تندرو", "synthetic": true, "shipping_irr": 50000, "minimum_order_irr": 0},
+    {"id": "v-flex", "name": "آزمایشی سبد", "synthetic": true, "shipping_irr": 30000, "minimum_order_irr": 0},
+    {"id": "v-paper", "name": "آزمایشی کاغذ", "synthetic": true, "shipping_irr": 40000, "minimum_order_irr": 0},
+    {"id": "v-it", "name": "آزمایشی رایان", "synthetic": true, "shipping_irr": 35000, "minimum_order_irr": 500000},
+    {"id": "v-opaque", "name": "آزمایشی نامشخص", "synthetic": true, "shipping_irr": null, "minimum_order_irr": 0}
+  ],
+  "source_documents": [
+    {
+      "id": "synthetic-grid-01",
+      "source_label": "synthetic_fixture",
+      "format": "listing_rows",
+      "generated_at": "2026-09-16T08:00:00Z",
+      "records": [
+        {
+          "listing_id": "grid-01", "merchant": "v-budget", "headline": "خودکار آبی ۰٫۷، بستهٔ ۱۰ عددی", "display_price": "۱۰۰٬۰۰۰ ریال", "packaging": "بستهٔ ۱۰ عددی",
+          "terms": {"min_packages": "۱", "package_step": "۱", "stock_packages": "۴", "lead_days": "۴", "invoice": "بله", "tax": "شامل مالیات"}
+        },
+        {
+          "listing_id": "grid-02", "merchant": "v-budget", "headline": "ماوس USB مدل M100 - تکی", "display_price": "۳۴۰٬۰۰۰ ریال", "packaging": "عدد",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "4", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-03", "merchant": "v-fast", "headline": "خودکار ۰٫۷ آبی / پک ۱۰ تایی", "display_price": "۱۳٬۰۰۰ تومان", "packaging": "پک ۱۰ تایی",
+          "terms": {"min_packages": "۱", "package_step": "۱", "stock_packages": "۴", "lead_days": "۱", "invoice": "بله", "tax": "شامل مالیات"}
+        },
+        {
+          "listing_id": "grid-04", "merchant": "v-fast", "headline": "ماوس باسیم M100", "display_price": "۴۲٬۰۰۰ تومان", "packaging": "تکی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "4", "lead_days": "1", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-05", "merchant": "v-paper", "headline": "کاغذ A4 ۸۰ گرم، کارتن ۵ بسته", "display_price": "۲٬۴۰۰٬۰۰۰ تومان", "packaging": "کارتن ۵ بسته ۵۰۰ برگی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "3", "lead_days": "3", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-06", "merchant": "v-flex", "headline": "خودکار ۰٫۷", "display_price": "۱۰۰٬۰۰۰ ریال", "packaging": "بسته ۱۰ عددی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "2", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-07", "merchant": "v-flex", "headline": "خودکار آبی ۰٫۷", "display_price": "۱۰۰٬۰۰۰ ریال", "packaging": "جعبه نامشخص",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "2", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-08", "merchant": "v-flex", "headline": "خودکار آبی ۰٫۷", "display_price": "تماس بگیرید", "packaging": "بسته ۱۰ عددی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "2", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-09", "merchant": "v-flex", "headline": "خودکار آبی ۰٫۷", "display_price": "۱۰۰,۰۰ ریال", "packaging": "بسته ۱۰ عددی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "2", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "listing_id": "grid-10", "merchant": "v-flex", "headline": "مداد سبز", "display_price": "۱۰۰٬۰۰۰ ریال", "packaging": "بسته ۱۰ عددی",
+          "terms": {"min_packages": "1", "package_step": "1", "stock_packages": "5", "lead_days": "2", "invoice": "yes", "tax": "included"}
+        }
+      ]
+    },
+    {
+      "id": "synthetic-cards-02",
+      "source_label": "synthetic_fixture",
+      "format": "vendor_cards",
+      "generated_at": "2026-09-16T08:00:00Z",
+      "cards": [
+        {
+          "ref": "card-01", "seller_ref": "v-flex", "product_name": "خودکار آبی 0.7", "price_label": "۶۰,۰۰۰ ریال", "quantity_label": "بسته ۵ عددی",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "8 بسته", "delivery": "2 روز", "invoice": "بله", "tax": "شامل مالیات"}
+        },
+        {
+          "ref": "card-02", "seller_ref": "v-flex", "product_name": "Mouse USB M100", "price_label": "۳۹٬۰۰۰ تومان", "quantity_label": "یک عدد",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "4 بسته", "delivery": "2 روز", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "ref": "card-03", "seller_ref": "v-it", "product_name": "ماوس USB مدل M100", "price_label": "۳۱۰٬۰۰۰ ریال", "quantity_label": "عدد",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "5 بسته", "delivery": "3 روز", "invoice": "خیر", "tax": "شامل مالیات"}
+        },
+        {
+          "ref": "card-04", "seller_ref": "v-paper", "product_name": "A4 80gsm", "price_label": "۴۸۰٬۰۰۰ تومان", "quantity_label": "بسته ۵۰۰ برگی",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "20 بسته", "delivery": "2 روز", "invoice": "بله", "tax": "شامل مالیات"}
+        },
+        {
+          "ref": "card-05", "seller_ref": "v-it", "product_name": "mouse wireless m200", "price_label": "۸۰۰٬۰۰۰ ریال", "quantity_label": "عدد",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "6 بسته", "delivery": "3 روز", "invoice": "خیر", "tax": "included"}
+        },
+        {
+          "ref": "card-06", "seller_ref": "v-budget", "product_name": "خودکار مشکی ۰٫۷", "price_label": "۱۱۰٬۰۰۰ ریال", "quantity_label": "بسته ۱۰ عددی",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "8 بسته", "delivery": "4 روز", "invoice": "بله", "tax": "included"}
+        },
+        {
+          "ref": "card-07", "seller_ref": "v-flex", "product_name": "خودکار آبی 0.7", "price_label": "۱۰۰٬۰۰۰ ریال", "quantity_label": "بسته ۱۰ عددی",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "4 بسته", "delivery": null, "invoice": "بله", "tax": "included"}
+        },
+        {
+          "ref": "card-08", "seller_ref": "v-flex", "product_name": "Mouse USB M100", "price_label": "۲۰ دلار", "quantity_label": "عدد",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "4 بسته", "delivery": "2 روز", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "ref": "card-09", "seller_ref": "v-fast", "product_name": "ماوس باسیم M100", "price_label": "۴۲۰٬۰۰۰ ریال", "quantity_label": "عدد",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": null, "delivery": "1 روز", "invoice": "yes", "tax": "included"}
+        },
+        {
+          "ref": "card-10", "seller_ref": "v-opaque", "product_name": "خودکار آبی 0.7", "price_label": "۹۰٬۰۰۰ ریال", "quantity_label": "بسته ۱۰ عددی",
+          "fulfilment": {"minimum_packs": "1", "order_step": "1", "stock": "4 بسته", "delivery": "2 روز", "invoice": "yes", "tax": "included"}
+        }
+      ]
+    }
+  ]
+}

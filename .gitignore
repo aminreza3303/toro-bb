@@ -1,0 +1,7 @@
+/.gstack/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.gstack/
+*.DS_Store
