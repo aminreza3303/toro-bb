@@ -39,11 +39,10 @@ body{background:var(--neutral);color:var(--on-surface);font-family:"IBM Plex San
 .storefront-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:28px;align-items:center;min-height:380px;padding:36px 40px;background:var(--primary);color:var(--on-primary);border-radius:var(--radius-lg);overflow:hidden}
 .storefront-copy h1,.business-hero h1{font-size:clamp(30px,3.7vw,51px);line-height:1.3;letter-spacing:-.025em;margin:0;max-width:650px}
 .storefront-copy h1 span{color:var(--tertiary)}
-.storefront-copy>p:not(.eyebrow):not(.demo-caveat){max-width:640px;font-size:15px;line-height:1.9;color:color-mix(in srgb,var(--on-primary) 82%,transparent)}
+.storefront-copy>p:not(.eyebrow){max-width:640px;font-size:15px;line-height:1.9;color:color-mix(in srgb,var(--on-primary) 82%,transparent)}
 .storefront-hero .eyebrow{color:var(--tertiary)}
 .storefront-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
 .storefront-actions .button-ghost{color:var(--on-primary);border-color:color-mix(in srgb,var(--on-primary) 55%,transparent)}
-.demo-caveat{font-size:11px;margin-top:19px;color:color-mix(in srgb,var(--on-primary) 66%,transparent)}
 .storefront-visual{position:relative;min-height:300px;display:grid;place-items:center;background:radial-gradient(circle at 52% 55%,color-mix(in srgb,var(--tertiary) 30%,transparent),transparent 57%)}
 .visual-sheet{position:relative;transform:rotate(-6deg);width:min(250px,72%);height:235px;padding:24px;background:var(--surface);color:var(--primary);border:1px solid var(--border);box-shadow:24px 25px 0 color-mix(in srgb,var(--tertiary) 35%,transparent);display:flex;flex-direction:column;gap:9px}
 .visual-sheet span{font-size:13px}.visual-sheet strong{font-size:48px;line-height:1.2}.visual-sheet i{height:10px;background:var(--soft-surface);display:block}.visual-sheet i:last-child{width:68%}

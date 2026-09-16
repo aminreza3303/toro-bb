@@ -365,17 +365,17 @@ class DemoHTTPServer(ThreadingHTTPServer):
 
 
 def create_server(host: str = "127.0.0.1", port: int = 8000, *, snapshot: dict[str, Any] | None = None) -> DemoHTTPServer:
-    """Create a testable loopback demo server without starting its event loop."""
+    """Create a loopback server without starting its event loop."""
     return DemoHTTPServer((host, port), DemoState(snapshot))
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run the local Torob Business demo API")
+    parser = argparse.ArgumentParser(description="Run the local Torob Business API")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
     server = create_server(args.host, args.port)
-    print(f"Torob Business demo available at http://{args.host}:{server.server_port}")
+    print(f"Torob Business available at http://{args.host}:{server.server_port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
