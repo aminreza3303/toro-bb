@@ -4,10 +4,1214 @@
   "captured_at": "2026-09-16T08:00:00Z",
   "kind": "synthetic",
   "rules_version": "normalize-v1",
+  "market_catalog": {
+    "captured_at": "2026-09-17",
+    "source_label": "torob_search_capture",
+    "vendors": [
+      {
+        "id": "v-torob",
+        "name": "ترب",
+        "synthetic": false,
+        "shipping_irr": null,
+        "minimum_order_irr": null,
+        "kind": "price_comparison_marketplace",
+        "source": "torob"
+      },
+      {
+        "id": "digikala",
+        "name": "دیجی کالا",
+        "synthetic": false,
+        "shipping_irr": null,
+        "minimum_order_irr": null,
+        "kind": "marketplace",
+        "source": "digikala_business"
+      }
+    ],
+    "products": [
+      {
+        "id": "chair-nilpram-oct-712t",
+        "category": "صندلی اداری",
+        "category_path": ["مبلمان و دکوراسیون اداری", "صندلی اداری"],
+        "name": "صندلی اداری نیلپرام مدل جلیقه‌ای OCT-712t",
+        "aliases": ["صندلی اداری OCT-712t", "صندلی نیلپرام OCT712T"],
+        "base_unit": "عدد",
+        "specs": {"brand": "نیلپرام", "model": "OCT-712t", "type": "کارمندی"}
+      },
+      {
+        "id": "chair-k713",
+        "category": "صندلی اداری",
+        "category_path": ["مبلمان و دکوراسیون اداری", "صندلی اداری"],
+        "name": "صندلی کارمندی کرکره‌ای مدل K713",
+        "aliases": ["صندلی اداری K713", "صندلی کارمندی K713"],
+        "base_unit": "عدد",
+        "specs": {"model": "K713", "type": "کارمندی", "backrest": "کرکره‌ای"}
+      },
+      {
+        "id": "monitor-gplus-sc245",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور جی‌پلاس 24 اینچ مدل SC-245",
+        "aliases": ["مانیتور جی پلاس SC-245", "GPlus SC-245"],
+        "base_unit": "عدد",
+        "specs": {"brand": "جی‌پلاس", "model": "SC-245", "size_inches": 24}
+      },
+      {
+        "id": "monitor-dell-p2419h-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور 24 اینچ دل مدل P2419H استوک",
+        "aliases": ["Dell P2419H استوک", "مانیتور دل P2419H"],
+        "base_unit": "عدد",
+        "specs": {"brand": "دل", "model": "P2419H", "size_inches": 24, "condition": "استوک"}
+      },
+      {
+        "id": "keyboard-xp-7200u",
+        "category": "کیبورد",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "لوازم جانبی کامپیوتر و لپ‌تاپ", "کیبورد"],
+        "name": "کیبورد باسیم XP مدل 7200U",
+        "aliases": ["کیبورد XP 7200U", "XP 7200U"],
+        "base_unit": "عدد",
+        "specs": {"brand": "XP", "model": "7200U", "connection": "wired_usb"}
+      },
+      {
+        "id": "keyboard-hatron-hk190",
+        "category": "کیبورد",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "لوازم جانبی کامپیوتر و لپ‌تاپ", "کیبورد"],
+        "name": "کیبورد باسیم هترون مدل HK190",
+        "aliases": ["کیبورد Hatron HK190", "Hatron HK190"],
+        "base_unit": "عدد",
+        "specs": {"brand": "هترون", "model": "HK190", "connection": "wired_usb"}
+      },
+      {
+        "id": "ssd-adlink-s20-1tb",
+        "category": "هارد و SSD",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "تجهیزات ذخیره‌سازی اطلاعات", "هارد و SSD"],
+        "name": "حافظه SSD اینترنال ادلینک مدل S20 ظرفیت 1 ترابایت",
+        "aliases": ["SSD ادلینک S20 1TB", "Adlink S20 1TB"],
+        "base_unit": "عدد",
+        "specs": {"brand": "ادلینک", "model": "S20", "capacity": "1TB", "interface": "SATA"}
+      },
+      {
+        "id": "ssd-verbatim-vi550-1tb",
+        "category": "هارد و SSD",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "تجهیزات ذخیره‌سازی اطلاعات", "هارد و SSD"],
+        "name": "حافظه SSD وریتیبیم مدل VI550 ظرفیت 1 ترابایت",
+        "aliases": ["SSD Verbatim VI550 S3 1TB", "Verbatim VI550 1TB"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Verbatim", "model": "VI550 S3", "capacity": "1TB", "interface": "SATA"}
+      },
+      {
+        "id": "hdd-wd-elements-1tb",
+        "category": "هارد و SSD",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "تجهیزات ذخیره‌سازی اطلاعات", "هارد و SSD"],
+        "name": "هارد اکسترنال وسترن دیجیتال مدل Elements ظرفیت 1 ترابایت",
+        "aliases": ["هارد WD Elements 1TB", "WD Elements 1TB"],
+        "base_unit": "عدد",
+        "specs": {"brand": "وسترن دیجیتال", "model": "Elements", "capacity": "1TB", "type": "external_hdd"}
+      },
+      {
+        "id": "printer-hp-laser-107a",
+        "category": "پرینتر",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "ماشین‌های اداری", "پرینتر"],
+        "name": "پرینتر لیزری اچ‌پی مدل Laser 107a",
+        "aliases": ["پرینتر HP 107a", "HP Laser 107a", "پرینتر اچ پی 107a"],
+        "base_unit": "عدد",
+        "specs": {"brand": "HP", "model": "Laser 107a", "type": "laser_mono", "connection": "USB"}
+      },
+      {
+        "id": "monitor-hp-gaming-25mx",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ اچ‌پی مدل Gaming-25mx",
+        "aliases": ["HP Gaming-25mx", "مانیتور HP Gaming 25mx"],
+        "base_unit": "عدد",
+        "specs": {"brand": "HP", "model": "Gaming-25mx", "size_inches": 25, "condition": "new", "listing_type": "ad"}
+      },
+      {
+        "id": "monitor-asus-vx229-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور ایسوس مدل VX229 (استوک)",
+        "aliases": ["ASUS VX229 استوک", "مانیتور Asus VX229"],
+        "base_unit": "عدد",
+        "specs": {"brand": "ASUS", "model": "VX229", "condition": "used"}
+      },
+      {
+        "id": "monitor-lg-u411-24",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور ال جی مدل U411 سایز ۲۴ اینچ Full HD IPS 120Hz",
+        "aliases": ["LG U411", "مانیتور LG U411 24"],
+        "base_unit": "عدد",
+        "specs": {"brand": "LG", "model": "U411", "size_inches": 24, "panel": "IPS", "resolution": "Full HD", "refresh_rate_hz": 120}
+      },
+      {
+        "id": "monitor-dahua-lm24-b201s",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور داهوا مدل LM24-B201S سایز ۲۴ اینچ",
+        "aliases": ["Dahua LM24-B201S", "مانیتور داهوا LM24 B201S"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dahua", "model": "LM24-B201S", "size_inches": 24}
+      },
+      {
+        "id": "monitor-dahua-lm22-h200",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور داهوا مدل LM22-H200 سایز ۲۲ اینچ Full HD 100Hz",
+        "aliases": ["Dahua LM22-H200", "مانیتور داهوا LM22 H200"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dahua", "model": "LM22-H200", "size_inches": 22, "resolution": "Full HD", "refresh_rate_hz": 100}
+      },
+      {
+        "id": "monitor-xiaomi-1c-238",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور شیائومی مدل 1C سایز ۲۳.۸ اینچ",
+        "aliases": ["Xiaomi 1C 23.8", "مانیتور Xiaomi 1C"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Xiaomi", "model": "1C", "size_inches": 23.8}
+      },
+      {
+        "id": "monitor-dell-p2217h-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور دل P2217H سایز ۲۲ اینچ IPS Full HD",
+        "aliases": ["Dell P2217H", "مانیتور Dell P2217H استوک"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dell", "model": "P2217H", "size_inches": 22, "panel": "IPS", "resolution": "Full HD", "condition": "used"}
+      },
+      {
+        "id": "monitor-viewsonic-vg2439smh-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور ۲۴ اینچ ویوسونیک مدل VG2439SMH استوک",
+        "aliases": ["ViewSonic VG2439SMH", "مانیتور ویوسونیک VG2439SMH"],
+        "base_unit": "عدد",
+        "specs": {"brand": "ViewSonic", "model": "VG2439SMH", "size_inches": 24, "condition": "used"}
+      },
+      {
+        "id": "monitor-coolermaster-ga25fc",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ کولر مستر GA25FC سایز ۲۵ اینچ IPS Full HD ۱۲۰ هرتز",
+        "aliases": ["Cooler Master GA25FC", "مانیتور GA25FC"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Cooler Master", "model": "GA25FC", "size_inches": 25, "panel": "IPS", "resolution": "Full HD", "refresh_rate_hz": 120}
+      },
+      {
+        "id": "monitor-hisense-27g5f-se",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ هایسنس 27G5F-SE سایز ۲۷ اینچ UHD 165 هرتز",
+        "aliases": ["Hisense 27G5F-SE", "مانیتور هایسنس 27G5F"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Hisense", "model": "27G5F-SE", "size_inches": 27, "resolution": "UHD", "refresh_rate_hz": 165, "listing_type": "ad"}
+      },
+      {
+        "id": "monitor-samsung-s20a310x-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور سامسونگ مدل S20A310X Plus سایز ۲۰ اینچ استوک",
+        "aliases": ["Samsung S20A310X Plus", "مانیتور سامسونگ S20A310X"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Samsung", "model": "S20A310X Plus", "size_inches": 20, "condition": "used"}
+      },
+      {
+        "id": "monitor-twistedminds-tm24fhd",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ تویستد مایندز TM24FHD ظرفیت ۲۴ اینچ IPS Full HD ۱۰۰ هرتز",
+        "aliases": ["Twisted Minds TM24FHD", "مانیتور TM24FHD"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Twisted Minds", "model": "TM24FHD", "size_inches": 24, "panel": "IPS", "resolution": "Full HD", "refresh_rate_hz": 100}
+      },
+      {
+        "id": "monitor-dahua-lm27-a201f",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور داهوا مدل LM27-A201F سایز ۲۷ اینچ فول اچ دی",
+        "aliases": ["Dahua LM27-A201F", "مانیتور داهوا LM27 A201F"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dahua", "model": "LM27-A201F", "size_inches": 27, "resolution": "Full HD"}
+      },
+      {
+        "id": "monitor-redragon-gm27x5ips",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ ۲۷ اینچ ردراگون مدل MIRROR III GM27X5IPS",
+        "aliases": ["Redragon GM27X5IPS", "Redragon MIRROR III"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Redragon", "model": "GM27X5IPS", "size_inches": 27, "panel": "IPS"}
+      },
+      {
+        "id": "monitor-dell-p2214-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور دل مدل P2214 سایز ۲۲ اینچ IPS با نرخ تازه‌سازی ۶۰ هرتز",
+        "aliases": ["Dell P2214", "مانیتور Dell P2214 استوک"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dell", "model": "P2214", "size_inches": 22, "panel": "IPS", "refresh_rate_hz": 60, "condition": "used"}
+      },
+      {
+        "id": "monitor-samsung-s20c325b-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور سامسونگ S20C325B سایز ۲۰ اینچ LED",
+        "aliases": ["Samsung S20C325B", "مانیتور سامسونگ S20C325B"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Samsung", "model": "S20C325B", "size_inches": 20, "type": "LED", "condition": "used"}
+      },
+      {
+        "id": "monitor-dell-p2314ht-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور دل مدل P2314ht سایز ۲۳ اینچ استوک",
+        "aliases": ["Dell P2314ht", "مانیتور Dell P2314ht"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dell", "model": "P2314ht", "size_inches": 23, "condition": "used"}
+      },
+      {
+        "id": "monitor-dell-p2417-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور دل P2417 سایز ۲۴ اینچ کیفیت Full HD",
+        "aliases": ["Dell P2417", "مانیتور Dell P2417"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Dell", "model": "P2417", "size_inches": 24, "resolution": "Full HD", "condition": "used"}
+      },
+      {
+        "id": "monitor-philips-221b3l-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور فیلیپس مدل 221B3L کارکرده",
+        "aliases": ["Philips 221B3L", "مانیتور Philips 221B3L"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Philips", "model": "221B3L", "condition": "used"}
+      },
+      {
+        "id": "monitor-univo-um2421-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور یونیوو مدل UM2421 سایز ۲۴ اینچ پنل IPS",
+        "aliases": ["Univo UM2421", "مانیتور Univo UM2421"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Univo", "model": "UM2421", "size_inches": 24, "panel": "IPS", "condition": "used"}
+      },
+      {
+        "id": "monitor-asus-tuf-vg27aql3a",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ ایسوس TUF VG27AQL3A سایز ۲۷ اینچ QHD ۱۸۰ هرتز ۱ میلی‌ثانیه",
+        "aliases": ["ASUS TUF VG27AQL3A", "مانیتور VG27AQL3A"],
+        "base_unit": "عدد",
+        "specs": {"brand": "ASUS", "model": "VG27AQL3A", "size_inches": 27, "resolution": "QHD", "refresh_rate_hz": 180, "response_time_ms": 1}
+      },
+      {
+        "id": "monitor-samsung-nw1633-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور سامسونگ مدل NW1633 سایز ۱۶ اینچ LCD HD",
+        "aliases": ["Samsung NW1633", "مانیتور سامسونگ NW1633"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Samsung", "model": "NW1633", "size_inches": 16, "resolution": "HD", "type": "LCD", "condition": "used"}
+      },
+      {
+        "id": "monitor-hp-e233-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور اچ پی ۲۳ اینچ مدل E233 استوک",
+        "aliases": ["HP E233", "مانیتور HP E233 استوک"],
+        "base_unit": "عدد",
+        "specs": {"brand": "HP", "model": "E233", "size_inches": 23, "condition": "used"}
+      },
+      {
+        "id": "monitor-xvision-xs3290g",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور گیمینگ ایکس ویژن مدل XS3290G سایز ۳۲ اینچ QHD ۱۸۰ هرتز",
+        "aliases": ["Xvision XS3290G", "مانیتور ایکس ویژن XS3290G"],
+        "base_unit": "عدد",
+        "specs": {"brand": "Xvision", "model": "XS3290G", "size_inches": 32, "resolution": "QHD", "refresh_rate_hz": 180}
+      },
+      {
+        "id": "monitor-hp-z27n-used",
+        "category": "مانیتور",
+        "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "کامپیوتر و مانیتور", "مانیتور"],
+        "name": "مانیتور اچ‌پی مدل Z27N سایز ۲۷ اینچ QHD IPS",
+        "aliases": ["HP Z27N", "مانیتور HP Z27N"],
+        "base_unit": "عدد",
+        "specs": {"brand": "HP", "model": "Z27N", "size_inches": 27, "resolution": "QHD", "panel": "IPS", "condition": "used"}
+      }
+    ],
+    "prices": [
+      {
+        "id": "price-torob-chair-nilpram-oct-712t",
+        "product_id": "chair-nilpram-oct-712t",
+        "supplier_id": "v-torob",
+        "price_irr": 138500000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-chair-search-01",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%D8%B5%D9%86%D8%AF%D9%84%DB%8C%20%D8%A7%D8%AF%D8%A7%D8%B1%DB%8C",
+        "raw_title": "صندلی اداری نیلپرام مدل جلیقه‌ای OCT-712t",
+        "raw_price_text": "۱۳٬۸۵۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-chair-k713",
+        "product_id": "chair-k713",
+        "supplier_id": "v-torob",
+        "price_irr": 45900000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-chair-search-02",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%D8%B5%D9%86%D8%AF%D9%84%DB%8C%20%D8%A7%D8%AF%D8%A7%D8%B1%DB%8C",
+        "raw_title": "صندلی کارمندی کرکره‌ای مدل K713",
+        "raw_price_text": "از ۴٬۵۹۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-gplus-sc245",
+        "product_id": "monitor-gplus-sc245",
+        "supplier_id": "v-torob",
+        "price_irr": 210000000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-monitor-search-01",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1%2024%20%D8%A7%DB%8C%D9%86%DA%86",
+        "raw_title": "مانیتور جی پلاس 24 اینچ sc-245",
+        "raw_price_text": "۲۱٬۰۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dell-p2419h-used",
+        "product_id": "monitor-dell-p2419h-used",
+        "supplier_id": "v-torob",
+        "price_irr": 156000000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-monitor-search-03",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور 24 اینچ دل مدل P2419H استوک",
+        "raw_price_text": "از ۱۵٬۶۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-keyboard-xp-7200u",
+        "product_id": "keyboard-xp-7200u",
+        "supplier_id": "v-torob",
+        "price_irr": 23000000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-keyboard-search-01",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%DA%A9%DB%8C%D8%A8%D9%88%D8%B1%D8%AF%20USB",
+        "raw_title": "کیبورد باسیم XP مدل 7200U",
+        "raw_price_text": "۲٬۳۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-keyboard-hatron-hk190",
+        "product_id": "keyboard-hatron-hk190",
+        "supplier_id": "v-torob",
+        "price_irr": 13500000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-keyboard-search-02",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%DA%A9%DB%8C%D8%A8%D9%88%D8%B1%D8%AF%20USB",
+        "raw_title": "کیبورد باسیم Hatron HK190 مشکی",
+        "raw_price_text": "از ۱٬۳۵۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-ssd-adlink-s20-1tb",
+        "product_id": "ssd-adlink-s20-1tb",
+        "supplier_id": "v-torob",
+        "price_irr": 176000000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-ssd-search-01",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=SSD%201TB",
+        "raw_title": "SSD ادلینک S20 1TB",
+        "raw_price_text": "از ۱۷٬۶۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-ssd-verbatim-vi550-1tb",
+        "product_id": "ssd-verbatim-vi550-1tb",
+        "supplier_id": "v-torob",
+        "price_irr": 138000000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-ssd-search-02",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=SSD%201TB",
+        "raw_title": "SSD Verbatim VI550 S3 1TB",
+        "raw_price_text": "از ۱۳٬۸۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-hdd-wd-elements-1tb",
+        "product_id": "hdd-wd-elements-1tb",
+        "supplier_id": "v-torob",
+        "price_irr": 82980000,
+        "package_size_base": 1,
+        "source_snapshot_id": "torob-search-2026-09-17",
+        "source_record_id": "torob-hdd-search-01",
+        "valid_at": "2026-09-17",
+        "source_url": "https://torob.com/search/?query=%D9%87%D8%A7%D8%B1%D8%AF%20%D8%A7%DA%A9%D8%B3%D8%AA%D8%B1%D9%86%D8%A7%D9%84%201TB",
+        "raw_title": "حافظه اچ دی دی اکسترنال وسترن دیجیتال مدل Elements ظرفیت 1 ترابایت",
+        "raw_price_text": "از ۸٬۲۹۸٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-synthetic-printer-hp-107a-budget",
+        "product_id": "printer-hp-laser-107a",
+        "supplier_id": "v-budget",
+        "price_irr": 178000000,
+        "package_size_base": 1,
+        "min_packages": 1,
+        "package_step": 1,
+        "stock_packages": 3,
+        "lead_days": 5,
+        "invoice_status": "declared_yes",
+        "tax_status": "included",
+        "source_label": "synthetic_fixture",
+        "source_snapshot_id": "demo-v1",
+        "source_record_id": "synthetic-printer-budget-01",
+        "valid_at": "2026-09-18",
+        "source_url": "synthetic://demo-v1/printer-hp-laser-107a/v-budget",
+        "raw_title": "پرینتر لیزری اچ‌پی مدل Laser 107a",
+        "raw_price_text": "۱۷٬۸۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-synthetic-printer-hp-107a-print",
+        "product_id": "printer-hp-laser-107a",
+        "supplier_id": "v-print",
+        "price_irr": 192000000,
+        "package_size_base": 1,
+        "min_packages": 1,
+        "package_step": 1,
+        "stock_packages": 7,
+        "lead_days": 3,
+        "invoice_status": "declared_yes",
+        "tax_status": "included",
+        "source_label": "synthetic_fixture",
+        "source_snapshot_id": "demo-v1",
+        "source_record_id": "synthetic-printer-print-01",
+        "valid_at": "2026-09-18",
+        "source_url": "synthetic://demo-v1/printer-hp-laser-107a/v-print",
+        "raw_title": "پرینتر HP Laser 107a، پلمپ",
+        "raw_price_text": "۱۹٬۲۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-synthetic-printer-hp-107a-it",
+        "product_id": "printer-hp-laser-107a",
+        "supplier_id": "v-it",
+        "price_irr": 201000000,
+        "package_size_base": 1,
+        "min_packages": 1,
+        "package_step": 1,
+        "stock_packages": 4,
+        "lead_days": 2,
+        "invoice_status": "declared_no",
+        "tax_status": "included",
+        "source_label": "synthetic_fixture",
+        "source_snapshot_id": "demo-v1",
+        "source_record_id": "synthetic-printer-it-01",
+        "valid_at": "2026-09-18",
+        "source_url": "synthetic://demo-v1/printer-hp-laser-107a/v-it",
+        "raw_title": "پرینتر لیزری HP 107a با ضمانت فروشنده",
+        "raw_price_text": "۲۰٬۱۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-synthetic-printer-hp-107a-fast",
+        "product_id": "printer-hp-laser-107a",
+        "supplier_id": "v-fast",
+        "price_irr": 210000000,
+        "package_size_base": 1,
+        "min_packages": 1,
+        "package_step": 1,
+        "stock_packages": 2,
+        "lead_days": 1,
+        "invoice_status": "declared_yes",
+        "tax_status": "included",
+        "source_label": "synthetic_fixture",
+        "source_snapshot_id": "demo-v1",
+        "source_record_id": "synthetic-printer-fast-01",
+        "valid_at": "2026-09-18",
+        "source_url": "synthetic://demo-v1/printer-hp-laser-107a/v-fast",
+        "raw_title": "پرینتر اچ‌پی 107a، ارسال فوری",
+        "raw_price_text": "۲۱٬۰۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-hp-gaming-25mx",
+        "product_id": "monitor-hp-gaming-25mx",
+        "supplier_id": "v-torob",
+        "price_irr": 388890000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-01",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ اچ‌پی مدل Gaming-25mx",
+        "raw_price_text": "۳۸٬۸۸۹٬۰۰۰ تومان",
+        "listing_type": "ad"
+      },
+      {
+        "id": "price-torob-monitor-asus-vx229-used",
+        "product_id": "monitor-asus-vx229-used",
+        "supplier_id": "v-torob",
+        "price_irr": 100000000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-02",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور ایسوس مدل VX229 (استوک)",
+        "raw_price_text": "۱۰٬۰۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-lg-u411-24",
+        "product_id": "monitor-lg-u411-24",
+        "supplier_id": "v-torob",
+        "price_irr": 254900000,
+        "package_size_base": 1,
+        "store_count": 61,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-04",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور ال جی مدل U411 سایز ۲۴ اینچ Full HD IPS 120Hz",
+        "raw_price_text": "از ۲۵٬۴۹۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dahua-lm24-b201s",
+        "product_id": "monitor-dahua-lm24-b201s",
+        "supplier_id": "v-torob",
+        "price_irr": 165000000,
+        "package_size_base": 1,
+        "store_count": 12,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-05",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور داهوا مدل LM24-B201S سایز 24 اینچ",
+        "raw_price_text": "از ۱۶٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dahua-lm22-h200",
+        "product_id": "monitor-dahua-lm22-h200",
+        "supplier_id": "v-torob",
+        "price_irr": 139000000,
+        "package_size_base": 1,
+        "store_count": 25,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-06",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور داهوا مدل LM22-H200 سایز ۲۲ اینچ Full HD 100Hz",
+        "raw_price_text": "از ۱۳٬۹۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-xiaomi-1c-238",
+        "product_id": "monitor-xiaomi-1c-238",
+        "supplier_id": "v-torob",
+        "price_irr": 300000000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-07",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور شیائومی مدل 1C سایز 23.8 اینچ",
+        "raw_price_text": "از ۳۰٬۰۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dell-p2217h-used",
+        "product_id": "monitor-dell-p2217h-used",
+        "supplier_id": "v-torob",
+        "price_irr": 89500000,
+        "package_size_base": 1,
+        "store_count": 25,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-08",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور دل P2217H سایز ۲۲ اینچ IPS Full HD",
+        "raw_price_text": "کارکرده از ۸٬۹۵۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-viewsonic-vg2439smh-used",
+        "product_id": "monitor-viewsonic-vg2439smh-used",
+        "supplier_id": "v-torob",
+        "price_irr": 135043000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-09",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور 24 اینچ ویوسونیک مدل VG2439SMH استوک",
+        "raw_price_text": "کارکرده از ۱۳٬۵۰۴٬۳۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-coolermaster-ga25fc",
+        "product_id": "monitor-coolermaster-ga25fc",
+        "supplier_id": "v-torob",
+        "price_irr": 259990000,
+        "package_size_base": 1,
+        "store_count": 12,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-10",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ کولر مستر GA25FC سایز ۲۵ اینچ IPS Full HD ۱۲۰ هرتز",
+        "raw_price_text": "از ۲۵٬۹۹۹٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-hisense-27g5f-se",
+        "product_id": "monitor-hisense-27g5f-se",
+        "supplier_id": "v-torob",
+        "price_irr": 558910000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-11",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ هایسنس 27G5F-SE سایز ۲۷ اینچ UHD 165 هرتز",
+        "raw_price_text": "۵۵٬۸۹۱٬۰۰۰ تومان",
+        "listing_type": "ad"
+      },
+      {
+        "id": "price-torob-monitor-samsung-s20a310x-used",
+        "product_id": "monitor-samsung-s20a310x-used",
+        "supplier_id": "v-torob",
+        "price_irr": 48000000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-12",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور سامسونگ مدل S20A310X Plus سایز ۲۰ اینچ استوک",
+        "raw_price_text": "کارکرده از ۴٬۸۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-twistedminds-tm24fhd",
+        "product_id": "monitor-twistedminds-tm24fhd",
+        "supplier_id": "v-torob",
+        "price_irr": 183000000,
+        "package_size_base": 1,
+        "store_count": 22,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-13",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ تویستد مایندز TM24FHD ظرفیت ۲۴ اینچ IPS Full HD ۱۰۰ هرتز",
+        "raw_price_text": "از ۱۸٬۳۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dahua-lm27-a201f",
+        "product_id": "monitor-dahua-lm27-a201f",
+        "supplier_id": "v-torob",
+        "price_irr": 186000000,
+        "package_size_base": 1,
+        "store_count": 8,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-14",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور داهوا مدل LM27-A201F سایز ۲۷ اینچ فول اچ دی",
+        "raw_price_text": "از ۱۸٬۶۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-redragon-gm27x5ips",
+        "product_id": "monitor-redragon-gm27x5ips",
+        "supplier_id": "v-torob",
+        "price_irr": 369980000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-15",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ 27.0 اینچ ردراگون مدل MIRROR III GM27X5IPS",
+        "raw_price_text": "از ۳۶٬۹۹۸٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dell-p2214-used",
+        "product_id": "monitor-dell-p2214-used",
+        "supplier_id": "v-torob",
+        "price_irr": 75000000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-16",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور دل مدل P2214 سایز ۲۲ اینچ IPS با نرخ تازه‌سازی ۶۰ هرتز",
+        "raw_price_text": "کارکرده ۷٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-samsung-s20c325b-used",
+        "product_id": "monitor-samsung-s20c325b-used",
+        "supplier_id": "v-torob",
+        "price_irr": 39000000,
+        "package_size_base": 1,
+        "store_count": 3,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-17",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور سامسونگ S20C325B سایز ۲۰ اینچ LED",
+        "raw_price_text": "کارکرده از ۳٬۹۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dell-p2314ht-used",
+        "product_id": "monitor-dell-p2314ht-used",
+        "supplier_id": "v-torob",
+        "price_irr": 88500000,
+        "package_size_base": 1,
+        "store_count": 9,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-18",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور دل مدل P2314ht 23 اینچ استوک",
+        "raw_price_text": "کارکرده از ۸٬۸۵۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-dell-p2417-used",
+        "product_id": "monitor-dell-p2417-used",
+        "supplier_id": "v-torob",
+        "price_irr": 105000000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-19",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور دل P2417 سایز ۲۴ اینچ کیفیت Full HD",
+        "raw_price_text": "کارکرده ۱۰٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-philips-221b3l-used",
+        "product_id": "monitor-philips-221b3l-used",
+        "supplier_id": "v-torob",
+        "price_irr": 115000000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-20",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور فیلیپس مدل 221B3L کارکرده",
+        "raw_price_text": "کارکرده ۱۱٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-univo-um2421-used",
+        "product_id": "monitor-univo-um2421-used",
+        "supplier_id": "v-torob",
+        "price_irr": 165000000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-21",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور یونیوو مدل UM2421 سایز ۲۴ اینچ پنل IPS",
+        "raw_price_text": "کارکرده ۱۶٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-asus-tuf-vg27aql3a",
+        "product_id": "monitor-asus-tuf-vg27aql3a",
+        "supplier_id": "v-torob",
+        "price_irr": 730000000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-22",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ ایسوس TUF VG27AQL3A سایز ۲۷ اینچ QHD ۱۸۰ هرتز ۱ میلی‌ثانیه",
+        "raw_price_text": "از ۷۳٬۰۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-samsung-nw1633-used",
+        "product_id": "monitor-samsung-nw1633-used",
+        "supplier_id": "v-torob",
+        "price_irr": 24500000,
+        "package_size_base": 1,
+        "store_count": 1,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-23",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور سامسونگ مدل NW1633 سایز ۱۶ اینچ LCD HD",
+        "raw_price_text": "کارکرده ۲٬۴۵۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-hp-e233-used",
+        "product_id": "monitor-hp-e233-used",
+        "supplier_id": "v-torob",
+        "price_irr": 155000000,
+        "package_size_base": 1,
+        "store_count": 9,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-24",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور اچ پی 23 اینچ مدل E233 استوک",
+        "raw_price_text": "کارکرده از ۱۵٬۵۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-xvision-xs3290g",
+        "product_id": "monitor-xvision-xs3290g",
+        "supplier_id": "v-torob",
+        "price_irr": 491000000,
+        "package_size_base": 1,
+        "store_count": 8,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-25",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور گیمینگ ایکس ویژن مدل XS3290G سایز ۳۲ اینچ QHD ۱۸۰ هرتز",
+        "raw_price_text": "از ۴۹٬۱۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-torob-monitor-hp-z27n-used",
+        "product_id": "monitor-hp-z27n-used",
+        "supplier_id": "v-torob",
+        "price_irr": 458000000,
+        "package_size_base": 1,
+        "store_count": 2,
+        "source_snapshot_id": "torob-search-2026-09-18-monitor",
+        "source_record_id": "torob-monitor-search-26",
+        "valid_at": "2026-09-18",
+        "source_url": "https://torob.com/search/?query=%D9%85%D8%A7%D9%86%DB%8C%D8%AA%D9%88%D8%B1&_search_landing=home",
+        "raw_title": "مانیتور اچ‌پی مدل Z27N سایز ۲۷ اینچ QHD IPS",
+        "raw_price_text": "کارکرده از ۴۵٬۸۰۰٬۰۰۰ تومان"
+      },
+      {
+        "id": "price-digikala-ssd-verbatim-vi550-1tb-40653",
+        "product_id": "ssd-verbatim-vi550-1tb",
+        "supplier_id": "digikala",
+        "price_irr": null,
+        "package_size_base": null,
+        "stock_packages": null,
+        "lead_days": null,
+        "source_label": "digikala_business_capture",
+        "source_snapshot_id": "digikala-business-2026-09-18",
+        "source_record_id": "digikala-business-product-40653",
+        "valid_at": "2026-09-18T15:32:34Z",
+        "captured_at": "2026-09-18T15:32:34Z",
+        "source_url": "https://b2b.digikala.com/api/v1/products?page=1&sort=most-relevant&query=VI550%20S3",
+        "raw_title": "اس اس دی اینترنال SATA III ورباتیم مدل VI550 S3 ظرفیت 1 ترابایت",
+        "raw_price_text": "ناموجود",
+        "price_status": "unavailable",
+        "stock_status": "not_reported",
+        "availability_status": "unavailable",
+        "match_status": "exact",
+        "field_status": {
+          "price_irr": "unavailable",
+          "raw_price_text": "observed",
+          "stock_packages": "not_reported",
+          "package_size_base": "not_reported",
+          "lead_days": "not_reported",
+          "source_url": "observed",
+          "captured_at": "observed"
+        },
+        "is_available": false
+      },
+      {
+        "id": "price-digikala-hdd-wd-elements-1tb-13636",
+        "product_id": "hdd-wd-elements-1tb",
+        "supplier_id": "digikala",
+        "price_irr": null,
+        "package_size_base": null,
+        "stock_packages": null,
+        "lead_days": null,
+        "source_label": "digikala_business_capture",
+        "source_snapshot_id": "digikala-business-2026-09-18",
+        "source_record_id": "digikala-business-product-13636",
+        "valid_at": "2026-09-18T15:32:34Z",
+        "captured_at": "2026-09-18T15:32:34Z",
+        "source_url": "https://b2b.digikala.com/api/v1/products?page=1&sort=most-relevant&query=Elements",
+        "raw_title": "هارد اکسترنال وسترن دیجیتال مدل Elements ظرفیت 1 ترابایت",
+        "raw_price_text": "ناموجود",
+        "price_status": "unavailable",
+        "stock_status": "not_reported",
+        "availability_status": "unavailable",
+        "match_status": "exact",
+        "field_status": {
+          "price_irr": "unavailable",
+          "raw_price_text": "observed",
+          "stock_packages": "not_reported",
+          "package_size_base": "not_reported",
+          "lead_days": "not_reported",
+          "source_url": "observed",
+          "captured_at": "observed"
+        },
+        "is_available": false
+      },
+      {
+        "id": "price-digikala-hdd-wd-elements-1tb-19905",
+        "product_id": "hdd-wd-elements-1tb",
+        "supplier_id": "digikala",
+        "price_irr": null,
+        "package_size_base": null,
+        "stock_packages": null,
+        "lead_days": null,
+        "source_label": "digikala_business_capture",
+        "source_snapshot_id": "digikala-business-2026-09-18",
+        "source_record_id": "digikala-business-product-19905",
+        "valid_at": "2026-09-18T15:32:34Z",
+        "captured_at": "2026-09-18T15:32:34Z",
+        "source_url": "https://b2b.digikala.com/api/v1/products?page=1&sort=most-relevant&query=Elements",
+        "raw_title": "هارد اکسترنال وسترن دیجیتال مدل Elements ظرفیت 1 ترابایت",
+        "raw_price_text": "ناموجود",
+        "price_status": "unavailable",
+        "stock_status": "not_reported",
+        "availability_status": "unavailable",
+        "match_status": "exact",
+        "field_status": {
+          "price_irr": "unavailable",
+          "raw_price_text": "observed",
+          "stock_packages": "not_reported",
+          "package_size_base": "not_reported",
+          "lead_days": "not_reported",
+          "source_url": "observed",
+          "captured_at": "observed"
+        },
+        "is_available": false
+      },
+      {
+        "id": "price-digikala-hdd-wd-elements-1tb-7357",
+        "product_id": "hdd-wd-elements-1tb",
+        "supplier_id": "digikala",
+        "price_irr": null,
+        "package_size_base": null,
+        "stock_packages": null,
+        "lead_days": null,
+        "source_label": "digikala_business_capture",
+        "source_snapshot_id": "digikala-business-2026-09-18",
+        "source_record_id": "digikala-business-product-7357",
+        "valid_at": "2026-09-18T15:32:34Z",
+        "captured_at": "2026-09-18T15:32:34Z",
+        "source_url": "https://b2b.digikala.com/api/v1/products?page=1&sort=most-relevant&query=Elements",
+        "raw_title": "هارد دیسک اکسترنال وسترن دیجیتال مدل ELEMENTS ظرفیت یک ترابایت",
+        "raw_price_text": "ناموجود",
+        "price_status": "unavailable",
+        "stock_status": "not_reported",
+        "availability_status": "unavailable",
+        "match_status": "exact",
+        "field_status": {
+          "price_irr": "unavailable",
+          "raw_price_text": "observed",
+          "stock_packages": "not_reported",
+          "package_size_base": "not_reported",
+          "lead_days": "not_reported",
+          "source_url": "observed",
+          "captured_at": "observed"
+        },
+        "is_available": false
+      },
+      {
+        "id": "price-digikala-printer-hp-laser-107a-21519",
+        "product_id": "printer-hp-laser-107a",
+        "supplier_id": "digikala",
+        "price_irr": null,
+        "package_size_base": null,
+        "stock_packages": null,
+        "lead_days": null,
+        "source_label": "digikala_business_capture",
+        "source_snapshot_id": "digikala-business-2026-09-18",
+        "source_record_id": "digikala-business-product-21519",
+        "valid_at": "2026-09-18T15:32:34Z",
+        "captured_at": "2026-09-18T15:32:34Z",
+        "source_url": "https://b2b.digikala.com/api/v1/products?page=1&sort=most-relevant&query=Laser%20107a",
+        "raw_title": "پرینتر لیزری اچ پی مدل Laser 107a",
+        "raw_price_text": "ناموجود",
+        "price_status": "unavailable",
+        "stock_status": "not_reported",
+        "availability_status": "unavailable",
+        "match_status": "exact",
+        "field_status": {
+          "price_irr": "unavailable",
+          "raw_price_text": "observed",
+          "stock_packages": "not_reported",
+          "package_size_base": "not_reported",
+          "lead_days": "not_reported",
+          "source_url": "observed",
+          "captured_at": "observed"
+        },
+        "is_available": false
+      }
+    ]
+  },
+  "decision_layer": {
+    "contexts": [
+      {
+        "id": "computer-storage-selection",
+        "domain": "computer_storage",
+        "title": "قبل از مقایسه، نوع ذخیره‌سازی را مشخص کن",
+        "summary": "SSD و HDD فقط با ظرفیت قابل‌مقایسه نیستند؛ رابط، سرعت و وضعیت کالا هم مهم است.",
+        "keywords": ["هارد", "ssd", "ذخیره سازی", "ذخیره‌سازی", "حافظه", "1tb", "ترابایت"],
+        "questions": [
+          {
+            "id": "storage_priority",
+            "label": "برای خرید سازمانی کدام مهم‌تر است؟",
+            "options": [
+              {"id": "speed", "label": "سرعت و دوام", "description": "معمولاً SSD مناسب‌تر است."},
+              {"id": "economy", "label": "هزینهٔ اقتصادی", "description": "HDD برای ظرفیت بیشتر اقتصادی‌تر است."},
+              {"id": "unknown", "label": "نمی‌دانم", "description": "تفاوت‌ها را بدون حدس‌زدن می‌بینم."}
+            ]
+          }
+        ],
+        "checks_before_buying": ["رابط دستگاه SATA است یا M.2؟", "SSD می‌خواهی یا HDD؟", "کالا نو است یا استوک؟"]
+      },
+      {
+        "id": "computer-monitor-selection",
+        "domain": "computer_monitor",
+        "title": "مانیتور را با پورت و وضعیت مقایسه کن",
+        "summary": "اندازهٔ یکسان به‌تنهایی کافی نیست؛ وضعیت کالا، نوع پنل و ورودی‌های دستگاه روی انتخاب اثر می‌گذارند.",
+        "keywords": ["مانیتور", "monitor", "صفحه نمایش", "نمایشگر"],
+        "questions": [
+          {
+            "id": "monitor_use",
+            "label": "کاربرد اصلی این مانیتور چیست؟",
+            "options": [
+              {"id": "office", "label": "کار اداری", "description": "ارگونومی و ورودی‌های سازگار مهم است."},
+              {"id": "design", "label": "طراحی و تصویر", "description": "پنل و دقت رنگ مهم‌تر می‌شود."},
+              {"id": "unknown", "label": "نمی‌دانم", "description": "تفاوت مشخصات را کنار قیمت می‌بینم."}
+            ]
+          }
+        ],
+        "checks_before_buying": ["ورودی HDMI/DisplayPort سیستم چیست؟", "کالا نو است یا استوک؟", "رزولوشن و نرخ نوسازی با کاربردت هم‌خوان است؟"]
+      },
+      {
+        "id": "office-chair-selection",
+        "domain": "office_furniture",
+        "title": "صندلی را با نوع استفاده مقایسه کن",
+        "summary": "تفاوت صندلی‌ها فقط در ظاهر نیست؛ نوع استفاده، پشتی، تنظیمات و گارانتی را جداگانه ببین.",
+        "keywords": ["صندلی", "صندلی اداری", "chair", "کارمندی", "مدیریتی"],
+        "questions": [
+          {
+            "id": "chair_use",
+            "label": "این صندلی برای چه استفاده‌ای است؟",
+            "options": [
+              {"id": "staff", "label": "کارمندی روزانه", "description": "تنظیمات و راحتی استفادهٔ طولانی مهم است."},
+              {"id": "executive", "label": "مدیریتی و جلسه", "description": "پشتی و فرم صندلی مهم‌تر می‌شود."},
+              {"id": "unknown", "label": "نمی‌دانم", "description": "تفاوت مدل‌ها را کنار قیمت می‌بینم."}
+            ]
+          }
+        ],
+        "checks_before_buying": ["ارتفاع و وزن قابل‌تحمل اعلام شده؟", "پشتی و دسته‌ها قابل‌تنظیم‌اند؟", "گارانتی یا خدمات پس از فروش ثبت شده؟"]
+      },
+      {
+        "id": "computer-peripheral-selection",
+        "domain": "computer_peripheral",
+        "title": "قبل از قیمت، اتصال و کاربرد را مشخص کن",
+        "summary": "ماوس و کیبوردهای ظاهراً مشابه ممکن است از نظر اتصال، بی‌سیم‌بودن و کاربرد هم‌ارز نباشند.",
+        "keywords": ["ماوس", "mouse", "کیبورد", "keyboard", "لوازم جانبی"],
+        "questions": [
+          {
+            "id": "peripheral_connection",
+            "label": "اتصال موردنیاز چیست؟",
+            "options": [
+              {"id": "wired", "label": "باسیم USB", "description": "برای میز ثابت و هزینهٔ کمتر."},
+              {"id": "wireless", "label": "بی‌سیم", "description": "برای میز منعطف‌تر و بدون کابل."},
+              {"id": "unknown", "label": "نمی‌دانم", "description": "تفاوت اتصال را کنار قیمت می‌بینم."}
+            ]
+          }
+        ],
+        "checks_before_buying": ["پورت USB آزاد وجود دارد؟", "اتصال باسیم یا بی‌سیم است؟", "برای استفادهٔ روزمره است یا تخصصی؟"]
+      },
+      {
+        "id": "office-paper-selection",
+        "domain": "office_consumable",
+        "title": "کاغذ را با اندازه و گرماژ مقایسه کن",
+        "summary": "قیمت کاغذ بدون اندازه، گرماژ و تعداد برگ قابل‌مقایسه نیست.",
+        "keywords": ["کاغذ", "a4", "paper", "برگ"],
+        "questions": [
+          {
+            "id": "paper_use",
+            "label": "کاغذ برای چه کاری است؟",
+            "options": [
+              {"id": "print", "label": "چاپ روزمره", "description": "A4 و گرماژ استاندارد کافی است."},
+              {"id": "presentation", "label": "پرینت رسمی", "description": "گرماژ و کیفیت سطح مهم‌تر می‌شود."},
+              {"id": "unknown", "label": "نمی‌دانم", "description": "تفاوت بسته‌ها را کنار قیمت می‌بینم."}
+            ]
+          }
+        ],
+        "checks_before_buying": ["اندازه A4 است؟", "گرماژ چند گرم است؟", "هر بسته چند برگ دارد؟"]
+      }
+    ],
+    "profiles": [
+      {"product_id": "paper-a4-80", "context_id": "office-paper-selection", "variant_group": "paper-a4-80", "fitment_status": "needs_check", "summary": "برای چاپگر و کاربرد معمول اداری معرفی شده؛ تعداد برگ و گرماژ را قبل از خرید چک کن."},
+      {"product_id": "mouse-usb-m100", "context_id": "computer-peripheral-selection", "variant_group": "office-pointer", "fitment_status": "needs_check", "summary": "اتصال USB باسیم در مشخصات کالا ثبت شده؛ سازگاری پورت دستگاه را بررسی کن."},
+      {"product_id": "mouse-wireless-m200", "context_id": "computer-peripheral-selection", "variant_group": "office-pointer", "fitment_status": "needs_check", "summary": "مدل بی‌سیم است؛ گیرنده و نیاز به پورت USB را قبل از خرید بررسی کن."},
+      {"product_id": "keyboard-xp-7200u", "context_id": "computer-peripheral-selection", "variant_group": "office-keyboard", "fitment_status": "needs_check", "summary": "کیبورد باسیم USB برای کار روزمره معرفی شده؛ نوع اتصال و چیدمان را بررسی کن."},
+      {"product_id": "keyboard-hatron-hk190", "context_id": "computer-peripheral-selection", "variant_group": "office-keyboard", "fitment_status": "needs_check", "summary": "کیبورد باسیم برای کار اداری معرفی شده؛ فاکتور و وضعیت کالا در قیمت‌گذاری مهم است."},
+      {"product_id": "monitor-gplus-sc245", "context_id": "computer-monitor-selection", "variant_group": "monitor-24", "fitment_status": "needs_check", "summary": "مانیتور ۲۴ اینچ نو/نامشخص؛ ورودی‌ها، پنل و کاربرد سازمانی را قبل از مقایسه چک کن."},
+      {"product_id": "monitor-dell-p2419h-used", "context_id": "computer-monitor-selection", "variant_group": "monitor-24", "fitment_status": "needs_check", "summary": "مدل ۲۴ اینچ استوک است؛ وضعیت ظاهری، سلامت پنل و امکان مرجوعی مهم است."},
+      {"product_id": "chair-nilpram-oct-712t", "context_id": "office-chair-selection", "variant_group": "office-chair", "fitment_status": "needs_check", "summary": "صندلی کارمندی با مدل مشخص؛ تنظیمات، تحمل وزن و گارانتی در دادهٔ فعلی کامل نیست."},
+      {"product_id": "chair-k713", "context_id": "office-chair-selection", "variant_group": "office-chair", "fitment_status": "needs_check", "summary": "صندلی کارمندی کرکره‌ای؛ ابعاد و خدمات پس از فروش را قبل از سفارش بررسی کن."},
+      {"product_id": "ssd-adlink-s20-1tb", "context_id": "computer-storage-selection", "variant_group": "storage-1tb", "fitment_status": "needs_check", "summary": "SSD یک ترابایت SATA؛ نوع رابط دستگاه باید قبل از خرید تأیید شود."},
+      {"product_id": "ssd-verbatim-vi550-1tb", "context_id": "computer-storage-selection", "variant_group": "storage-1tb", "fitment_status": "needs_check", "summary": "SSD یک ترابایت SATA؛ تفاوت برند و گارانتی را با گزینه‌های دیگر مقایسه کن."},
+      {"product_id": "hdd-wd-elements-1tb", "context_id": "computer-storage-selection", "variant_group": "storage-1tb", "fitment_status": "needs_check", "summary": "هارد اکسترنال یک ترابایت؛ برای پشتیبان‌گیری مناسب‌تر است اما با SSD هم‌رده نیست."}
+    ]
+  },
+  "category_tree": [
+    {
+      "id": "stationery",
+      "name": "کتاب، لوازم تحریر و هنر",
+      "children": [
+        {"id": "writing", "name": "نوشت‌افزار"},
+        {"id": "office-supplies", "name": "لوازم اداری"},
+        {"id": "paper-notebook", "name": "دفتر و کاغذ و مقوا"}
+      ]
+    },
+    {
+      "id": "computer-office",
+      "name": "لپ‌تاپ، کامپیوتر، اداری",
+      "children": [
+        {"id": "computer-monitor", "name": "کامپیوتر و مانیتور", "children": [{"id": "monitor", "name": "مانیتور"}]},
+        {"id": "computer-accessories", "name": "لوازم جانبی کامپیوتر و لپ‌تاپ", "children": [
+          {"id": "mouse", "name": "ماوس"},
+          {"id": "keyboard", "name": "کیبورد"}
+        ]},
+        {"id": "office-machines", "name": "ماشین‌های اداری", "children": [
+          {"id": "printer", "name": "پرینتر"},
+          {"id": "toner-ink", "name": "تونر و جوهر"}
+        ]},
+        {"id": "storage", "name": "تجهیزات ذخیره‌سازی اطلاعات", "children": [
+          {"id": "hard-ssd", "name": "هارد و SSD"},
+          {"id": "flash", "name": "فلش مموری"}
+        ]},
+        {"id": "network", "name": "تجهیزات شبکه", "children": [
+          {"id": "modem-router", "name": "مودم و روتر"},
+          {"id": "switch", "name": "سوئیچ"}
+        ]}
+      ]
+    },
+    {
+      "id": "office-furniture",
+      "name": "مبلمان و دکوراسیون اداری",
+      "children": [
+        {"id": "office-seating", "name": "صندلی اداری"},
+        {"id": "office-desks", "name": "میز اداری"},
+        {"id": "office-storage", "name": "کمد و فایل اداری"}
+      ]
+    }
+  ],
   "catalog": [
     {
       "id": "pen-blue-07",
-      "category": "لوازم اداری",
+      "category": "نوشت‌افزار",
+      "category_path": ["کتاب، لوازم تحریر و هنر", "نوشت‌افزار"],
       "name": "خودکار آبی 0.7",
       "aliases": ["خودکار 0.7 آبی", "blue pen 0.7", "خودکار 0.7"],
       "base_unit": "عدد",
@@ -16,7 +1220,8 @@
     },
     {
       "id": "pen-black-07",
-      "category": "لوازم اداری",
+      "category": "نوشت‌افزار",
+      "category_path": ["کتاب، لوازم تحریر و هنر", "نوشت‌افزار"],
       "name": "خودکار مشکی 0.7",
       "aliases": ["خودکار 0.7 مشکی", "black pen 0.7", "خودکار 0.7"],
       "base_unit": "عدد",
@@ -25,7 +1230,8 @@
     },
     {
       "id": "paper-a4-80",
-      "category": "لوازم اداری",
+      "category": "دفتر و کاغذ و مقوا",
+      "category_path": ["کتاب، لوازم تحریر و هنر", "دفتر و کاغذ و مقوا"],
       "name": "کاغذ A4 80 گرم",
       "aliases": ["کاغذ A4 80gr", "A4 80gsm"],
       "base_unit": "بسته ۵۰۰ برگی",
@@ -33,7 +1239,8 @@
     },
     {
       "id": "mouse-usb-m100",
-      "category": "تجهیزات IT",
+      "category": "ماوس",
+      "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "لوازم جانبی کامپیوتر و لپ‌تاپ", "ماوس"],
       "name": "ماوس USB مدل M100",
       "aliases": ["mouse usb m100", "ماوس باسیم M100"],
       "base_unit": "عدد",
@@ -42,7 +1249,8 @@
     },
     {
       "id": "mouse-wireless-m200",
-      "category": "تجهیزات IT",
+      "category": "ماوس",
+      "category_path": ["لپ‌تاپ، کامپیوتر، اداری", "لوازم جانبی کامپیوتر و لپ‌تاپ", "ماوس"],
       "name": "ماوس بی سیم مدل M200",
       "aliases": ["mouse wireless m200", "ماوس بیسیم M200"],
       "base_unit": "عدد",
@@ -56,7 +1264,8 @@
     {"id": "v-flex", "name": "آزمایشی سبد", "synthetic": true, "shipping_irr": 30000, "minimum_order_irr": 0},
     {"id": "v-paper", "name": "آزمایشی کاغذ", "synthetic": true, "shipping_irr": 40000, "minimum_order_irr": 0},
     {"id": "v-it", "name": "آزمایشی رایان", "synthetic": true, "shipping_irr": 35000, "minimum_order_irr": 500000},
-    {"id": "v-opaque", "name": "آزمایشی نامشخص", "synthetic": true, "shipping_irr": null, "minimum_order_irr": 0}
+    {"id": "v-opaque", "name": "آزمایشی نامشخص", "synthetic": true, "shipping_irr": null, "minimum_order_irr": 0},
+    {"id": "v-print", "name": "آزمایشی چاپ‌گستر", "synthetic": true, "shipping_irr": 45000, "minimum_order_irr": 0}
   ],
   "source_documents": [
     {

@@ -14,7 +14,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" id="brand-home" href="#business-title" aria-label="صفحهٔ خرید سازمانی ترب‌بیزینس"><span class="brand-logo-panel brand-symbol-panel"><img src="/brand/torob-business-symbol.png" alt="نشان ترب‌بیزینس"></span><div><strong>ترب‌بیزینس</strong><small>از چند جا قیمت بگیر، بهتر تصمیم بگیر</small></div></a>
+    <a class="brand" id="brand-home" href="#business-title" aria-label="صفحهٔ خرید سازمانی ترب‌بیزینس"><span class="brand-logo-panel"><img src="/brand/torob-business-logo-transparent.png" alt="نشان ترب‌بیزینس"></span><div><strong>ترب‌بیزینس</strong><small>از چند جا قیمت بگیر، بهتر تصمیم بگیر</small></div></a>
     <div class="topbar-actions"><button id="theme-toggle" class="theme-toggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☾</button></div>
   </header>
   <nav class="site-nav" aria-label="بخش‌های سایت"><div class="site-nav-inner">
@@ -30,20 +30,49 @@
           <p class="eyebrow">بازار خرید کسب‌وکار</p>
           <h1 id="storefront-title">خرید چندقلمی را از <span>کالای درست</span> شروع کن.</h1>
           <p>کالاهای استاندارد اداری و IT را ببین، تعداد موردنیاز را به فهرست اضافه کن و بعد ترکیب پیشنهادهای فروشندگان را با بودجه و زمان تحویل مقایسه کن.</p>
-          <div class="storefront-actions"><button type="button" class="button button-ghost" data-view="business">آشنایی با خرید سازمانی</button></div>
+          <div class="storefront-actions"><button type="button" class="button button-ghost" id="catalog-start">شروع جست‌وجوی کالاها</button></div>
         </div>
         <div class="storefront-visual" aria-hidden="true"><div class="visual-sheet"><span>فهرست خرید</span><strong>۰۲ قلم</strong><i></i><i></i><i></i></div><div class="visual-tag">قیمت · زمان · منشأ</div></div>
       </div>
 
       <section class="catalog-section" aria-labelledby="catalog-title">
-        <div class="section-heading"><div><p class="eyebrow">کاتالوگ کالاها</p><h2 id="catalog-title">کالاهای قابل‌مقایسه</h2><p>قیمت‌ها به ریال و بر اساس پیشنهادهای پذیرفته‌شدهٔ مجموعهٔ فعال نمایش داده می‌شوند.</p></div><span id="catalog-total" class="catalog-total">در حال بارگذاری…</span></div>
-        <div class="catalog-toolbar"><label class="catalog-search"><span>جست‌وجوی کالا یا مدل</span><div class="catalog-search-field"><span class="search-glyph" aria-hidden="true">⌕</span><input id="catalog-query" type="search" autocomplete="off" placeholder="مثلاً ماوس USB یا کاغذ A4 را جست‌وجو کنید"><button type="button" id="clear-catalog-query" class="clear-search" aria-label="پاک کردن جست‌وجو" hidden>×</button></div></label><div id="category-filters" class="category-filters" role="group" aria-label="دسته‌بندی کالاها"></div></div>
+        <div class="section-heading"><div><p class="eyebrow">کاتالوگ کالاها</p><h2 id="catalog-title">کالاهای قابل‌مقایسه</h2><p>دسته‌بندی‌ها با نام‌گذاری رایج دیجی‌کالا و ترب، از ریشهٔ کالا تا زیر‌دستهٔ دقیق نمایش داده می‌شوند.</p></div><span id="catalog-total" class="catalog-total">در حال بارگذاری…</span></div>
+        <div class="catalog-toolbar"><label class="catalog-search"><span>جست‌وجوی کالا یا مدل</span><div class="catalog-search-field"><span class="search-glyph" aria-hidden="true">⌕</span><input id="catalog-query" type="search" autocomplete="off" placeholder="مثلاً ماوس USB یا کاغذ A4 را جست‌وجو کنید"><button type="button" id="clear-catalog-query" class="clear-search" aria-label="پاک کردن جست‌وجو" hidden>×</button></div></label><div id="category-filters" class="category-filters" role="group" aria-label="دسته‌بندی کالاها؛ ابتدا ریشه و سپس زیر‌دسته را انتخاب کنید"></div></div>
+        <section id="decision-helper" class="decision-helper" hidden aria-live="polite" aria-labelledby="decision-helper-title"></section>
         <div id="catalog-error" class="notice error" role="status" hidden></div>
         <div id="product-grid" class="product-grid"><p class="catalog-loading">در حال بارگذاری کاتالوگ کالاها…</p></div>
         <div id="catalog-empty" class="catalog-empty" hidden><h3>کالایی پیدا نشد</h3><p>عبارت جست‌وجو یا دسته‌بندی را تغییر دهید.</p><button type="button" id="clear-catalog-search" class="button button-ghost">نمایش همهٔ کالاها</button></div>
       </section>
 
       <section class="storefront-benefits" aria-label="مزیت‌ها"><article><span>۱</span><h3>فهرست چندقلمی</h3><p>چند کالا را در یک درخواست کنار هم بررسی کنید.</p></article><article><span>۲</span><h3>قیمت قابل‌مقایسه</h3><p>بسته‌بندی، تعداد و ارسال در جمع کل لحاظ می‌شوند.</p></article><article><span>۳</span><h3>تصمیم قابل‌ردیابی</h3><p>منشأ هر پیشنهاد و دلیل رتبه‌بندی را ببینید.</p></article></section>
+    </section>
+
+    <section id="product-detail-view" class="product-detail-view" hidden aria-labelledby="product-detail-title">
+      <div class="detail-back-row"><button id="back-to-catalog" class="button button-ghost" type="button">→ بازگشت به فهرست کالاها</button></div>
+      <div id="product-detail-loading" class="catalog-loading">در حال خواندن جزئیات کالا…</div>
+      <div id="product-detail-content" hidden>
+        <div class="product-detail-hero">
+          <div class="product-detail-copy">
+            <p id="product-detail-path" class="eyebrow"></p>
+            <h1 id="product-detail-title"></h1>
+            <p id="product-detail-id" class="muted"></p>
+            <div id="product-detail-summary" class="detail-summary"></div>
+          </div>
+          <div id="product-detail-price-hero" class="detail-price-hero"></div>
+        </div>
+        <section id="product-decision-card" class="card decision-card" hidden aria-labelledby="product-decision-title"></section>
+        <div class="product-detail-grid">
+          <section class="card detail-card" aria-labelledby="product-prices-title">
+            <div class="detail-card-heading"><div><p class="eyebrow">مقایسهٔ شفاف</p><h2 id="product-prices-title">قیمت‌ها به تفکیک تأمین‌کننده</h2></div><span id="product-price-count" class="catalog-total"></span></div>
+            <div id="product-price-list" class="price-list"></div>
+          </section>
+          <aside class="card detail-card" aria-labelledby="product-specs-title">
+            <p class="eyebrow">اطلاعات کالا</p><h2 id="product-specs-title">مشخصات و خرید</h2>
+            <div id="product-specs" class="spec-grid"></div>
+            <div class="detail-add-box"><label for="product-detail-qty">تعداد موردنیاز</label><div><input id="product-detail-qty" type="number" min="1" step="1" value="1"><button id="product-detail-add" class="button button-primary" type="button">افزودن به فهرست خرید</button></div></div>
+          </aside>
+        </div>
+      </div>
     </section>
 
     <section id="business-view" class="business-view" aria-labelledby="business-title">
@@ -86,9 +115,8 @@
     <section id="results-view" hidden aria-labelledby="results-title"><div class="results-header"><div><p class="eyebrow">نتیجهٔ اجرای قطعی</p><h2 id="results-title">ترکیب‌های پیشنهادی</h2><p id="results-subtitle" class="helper"></p></div><div class="result-actions"><div class="intent-switch" role="group" aria-label="اولویت رتبه‌بندی"><button type="button" data-preference="lowest_cost" class="intent-button active">کمترین هزینه</button><button type="button" data-preference="fastest_delivery" class="intent-button">سریع‌ترین تحویل</button></div><button id="edit-request" class="button button-ghost" type="button">ویرایش درخواست</button></div></div><div id="result-summary" class="result-summary"></div><div id="results" class="results-list"></div><div id="uncovered" class="uncovered" hidden></div></section>
     </div>
   </main>
-  <footer><span>ترب‌بیزینس · خرید و مقایسهٔ سازمانی</span><span>قیمت، زمان تحویل و منشأ پیشنهادها را کنار هم ببینید</span><a class="asset-credit" href="https://www.thiings.co/things" target="_blank" rel="noopener noreferrer">آیکون‌های لندینگ: Thiings</a></footer>
-  <dialog id="provenance-dialog" class="provenance"><div class="dialog-head"><h2>منشأ پیشنهاد</h2><button id="close-dialog" class="icon-button" aria-label="بستن">×</button></div><div id="provenance-content"></div></dialog>
-  <dialog id="product-dialog" class="product-dialog" aria-labelledby="product-dialog-title"><div class="dialog-head"><h2 id="product-dialog-title">جزئیات کالا</h2><button id="close-product-dialog" class="icon-button" type="button" aria-label="بستن">×</button></div><div id="product-dialog-content"></div></dialog>
+  <footer><span>ترب‌بیزینس · خرید و مقایسهٔ سازمانی</span><span>قیمت، زمان تحویل و منشأ پیشنهادها را کنار هم ببینید</span></footer>
+  <dialog id="provenance-dialog" class="provenance" aria-labelledby="provenance-title"><div class="dialog-head"><h2 id="provenance-title">منشأ پیشنهاد</h2><button id="close-dialog" class="icon-button" aria-label="بستن">×</button></div><div id="provenance-content"></div></dialog>
   <script src="app.js" defer></script>
 </body>
 </html>

@@ -21,6 +21,34 @@ def normalize_query(value: str) -> str:
     return " ".join(re.findall(r"[\w]+", value, flags=re.UNICODE))
 
 
+def exact_sku_match(item: dict, raw_title: str) -> bool:
+    """Return whether a marketplace title names the exact catalog SKU.
+
+    A model token alone is not enough for storage products: capacities such as
+    ``1TB`` are part of the SKU and must also be present in the source title.
+    Missing evidence is therefore a non-match, never an inferred match.
+    """
+    title = normalize_query(raw_title or "")
+    specs = item.get("specs", {})
+    model = normalize_query(str(specs.get("model", "")))
+    if not model or model not in title:
+        return False
+
+    capacity = normalize_query(str(specs.get("capacity", "")))
+    if not capacity:
+        return True
+    variants = {capacity}
+    capacity_match = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)\s*(tb|gb|mb)", capacity)
+    if capacity_match:
+        amount, unit = capacity_match.groups()
+        unit_names = {"tb": "ترابایت", "gb": "گیگابایت", "mb": "مگابایت"}
+        variants.add(f"{amount} {unit_names[unit]}")
+        if amount == "1":
+            unit_one = {"tb": "ترابایت", "gb": "گیگابایت", "mb": "مگابایت"}[unit]
+            variants.add(f"یک {unit_one}")
+    return any(variant in title for variant in variants)
+
+
 def search_catalog(snapshot: dict, query: str) -> list[dict]:
     """Return exact then partial SKU candidates and their usable offer counts.
 
@@ -35,6 +63,9 @@ def search_catalog(snapshot: dict, query: str) -> list[dict]:
             sku = offer.get("catalog_item_id")
             if sku:
                 usable_counts[sku] = usable_counts.get(sku, 0) + 1
+    for price in snapshot.get("market_prices", []):
+        if price.get("is_available", True) and price.get("product_id"):
+            usable_counts[price["product_id"]] = usable_counts.get(price["product_id"], 0) + 1
     found = []
     for item in snapshot.get("catalog", []):
         terms = {normalize_query(item["name"])}
@@ -51,6 +82,7 @@ def search_catalog(snapshot: dict, query: str) -> list[dict]:
                 "catalog_item_id": item["id"],
                 "name": item["name"],
                 "category": item["category"],
+                "category_path": item.get("category_path", [item["category"]]),
                 "base_unit": item["base_unit"],
                 "match_kind": kind,
                 "offer_count": usable_counts.get(item["id"], 0),

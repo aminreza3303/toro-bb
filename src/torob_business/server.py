@@ -18,6 +18,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from .data import load_demo
+from .database import CatalogDatabase
 from .matching import normalize_query, resolve_rfq, search_catalog
 from .ranking import evaluate
 
@@ -29,6 +30,7 @@ _STATIC_TYPES = {
     "styles.css": "text/css; charset=utf-8",
     "fonts/Vazirmatn.ttf": "font/ttf",
     "brand/torob-business-logo.png": "image/png",
+    "brand/torob-business-logo-transparent.png": "image/png",
     "brand/torob-business-symbol.png": "image/png",
     "catalog/ballpen.svg": "image/svg+xml",
     "catalog/stack-of-papers.svg": "image/svg+xml",
@@ -48,25 +50,30 @@ class ApiError(Exception):
 
 
 class DemoState:
-    def __init__(self, snapshot: dict[str, Any] | None = None):
+    def __init__(self, snapshot: dict[str, Any] | None = None, db_path: str | Path = ":memory:"):
         self.snapshot = snapshot or load_demo()
+        self.db = CatalogDatabase(db_path)
+        self.db.sync_snapshot(self.snapshot)
         self.rfqs: dict[str, dict[str, Any]] = {}
         self.runs: dict[str, dict[str, Any]] = {}
 
 
-def _metadata(snapshot: dict[str, Any]) -> dict[str, Any]:
+def _metadata(snapshot: dict[str, Any], database: CatalogDatabase | None = None) -> dict[str, Any]:
     metadata = {key: snapshot.get(key) for key in ("id", "version", "captured_at", "kind", "rules_version", "content_hash")}
     offers = snapshot.get("offers", [])
+    db_counts = database.counts() if database else None
     return {
         "metadata": metadata,
+        "categories": snapshot.get("category_tree", []),
         "catalog": snapshot.get("catalog", []),
         "vendors": snapshot.get("vendors", []),
         "counts": {
-            "catalog_items": len(snapshot.get("catalog", [])),
-            "vendors": len(snapshot.get("vendors", [])),
+            "catalog_items": db_counts["products"] if db_counts else len(snapshot.get("catalog", [])),
+            "vendors": db_counts["suppliers"] if db_counts else len(snapshot.get("vendors", [])),
             "offers": len(offers),
             "accepted_offers": sum(offer.get("normalization_status") == "accepted" for offer in offers),
             "rejected_offers": sum(offer.get("normalization_status") != "accepted" for offer in offers),
+            "prices": db_counts["prices"] if db_counts else sum(offer.get("normalization_status") == "accepted" for offer in offers),
         },
     }
 
@@ -98,15 +105,62 @@ def _lowest_prices(offers: list[dict[str, Any]]) -> tuple[int | None, int | None
     return (min(package_prices) if package_prices else None, min(base_unit_prices) if base_unit_prices else None)
 
 
-def _catalog_listing(snapshot: dict[str, Any], query: str | None, category: str | None) -> list[dict[str, Any]]:
+def _source_comparison(prices: list[dict[str, Any]]) -> dict[str, Any]:
+    """Group supplier records without collapsing unknown marketplace fields."""
+    grouped: dict[str, dict[str, Any]] = {}
+    labels = {
+        "price_irr": "قیمت",
+        "stock_packages": "موجودی",
+        "lead_days": "زمان تحویل",
+        "package_size_base": "واحد بسته",
+        "invoice_status": "وضعیت فاکتور",
+    }
+    for price in prices:
+        supplier_id = price.get("supplier_id") or "unknown"
+        group = grouped.setdefault(supplier_id, {
+            "supplier_id": supplier_id,
+            "supplier_name": price.get("supplier_name") or supplier_id,
+            "supplier_kind": price.get("supplier_kind"),
+            "supplier_source": price.get("supplier_source"),
+            "source_labels": [],
+            "records": [],
+            "unknown_fields": [],
+            "sku_match_status": "unknown",
+        })
+        if price.get("source_label") and price["source_label"] not in group["source_labels"]:
+            group["source_labels"].append(price["source_label"])
+        group["records"].append(price)
+        if price.get("match_status") == "exact":
+            group["sku_match_status"] = "exact"
+        elif group["sku_match_status"] == "unknown" and price.get("match_status"):
+            group["sku_match_status"] = price["match_status"]
+        field_status = price.get("field_status", {})
+        for field, label in labels.items():
+            if price.get(field) is None or field_status.get(field) in {"unknown", "not_reported", "unavailable"}:
+                if label not in group["unknown_fields"]:
+                    group["unknown_fields"].append(label)
+    sources = list(grouped.values())
+    for group in sources:
+        group["record_count"] = len(group["records"])
+        group["source_urls"] = sorted({record["source_url"] for record in group["records"] if record.get("source_url")})
+    return {
+        "overlap": any(group["supplier_id"] == "digikala" for group in sources) and len(sources) > 1,
+        "sources": sources,
+        "unknown_differences": sorted({field for group in sources for field in group["unknown_fields"]}),
+    }
+
+
+def _snapshot_catalog_listing(snapshot: dict[str, Any], query: str | None, category: str | None) -> list[dict[str, Any]]:
     """Build synthetic storefront cards without implying live commercial data."""
     query_key = normalize_query(query or "")
     category_key = normalize_query(category or "")
     cards: list[dict[str, Any]] = []
     for item in snapshot.get("catalog", []):
         item_category = item.get("category", "")
+        category_path = item.get("category_path") or [item_category]
+        normalized_path = [normalize_query(part) for part in category_path if part]
         terms = [item.get("name", ""), *item.get("aliases", [])]
-        if category_key and normalize_query(item_category) != category_key:
+        if category_key and category_key not in normalized_path:
             continue
         if query_key and not any(query_key in normalize_query(term) for term in terms):
             continue
@@ -115,6 +169,7 @@ def _catalog_listing(snapshot: dict[str, Any], query: str | None, category: str 
         cards.append({
             "catalog_item_id": item["id"],
             "category": item_category,
+            "category_path": category_path,
             "name": item.get("name"),
             "base_unit": item.get("base_unit"),
             "accepted_offer_count": len(offers),
@@ -124,7 +179,7 @@ def _catalog_listing(snapshot: dict[str, Any], query: str | None, category: str 
     return cards
 
 
-def _catalog_item_detail(snapshot: dict[str, Any], catalog_item_id: str) -> dict[str, Any]:
+def _snapshot_catalog_item_detail(snapshot: dict[str, Any], catalog_item_id: str) -> dict[str, Any]:
     item = next((entry for entry in snapshot.get("catalog", []) if entry.get("id") == catalog_item_id), None)
     if item is None:
         raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", f"Catalog item {catalog_item_id} was not found")
@@ -236,20 +291,68 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
     def _dispatch_get(self, path: str, query: dict[str, list[str]]) -> None:
         state = self.server.state
         if path == "/api/datasets/active":
-            self._json(200, _metadata(state.snapshot))
+            self._json(200, _metadata(state.snapshot, state.db))
         elif path == "/api/catalog/items":
             query_value = query.get("q", [None])[0]
             category_value = query.get("category", [None])[0]
             self._json(200, {
                 "snapshot_id": state.snapshot["id"],
                 "data_kind": state.snapshot.get("kind"),
-                "items": _catalog_listing(state.snapshot, query_value, category_value),
+                "categories": state.snapshot.get("category_tree", []),
+                "items": state.db.list_products(query_value, category_value),
             })
         elif path.startswith("/api/catalog/items/"):
             catalog_item_id = path.removeprefix("/api/catalog/items/")
             if not catalog_item_id or "/" in catalog_item_id:
                 raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", "Catalog item was not found")
-            self._json(200, _catalog_item_detail(state.snapshot, catalog_item_id))
+            product = state.db.get_product(catalog_item_id)
+            if product is None:
+                raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", f"Catalog item {catalog_item_id} was not found")
+            prices = product.pop("prices", [])
+            legacy_offers = []
+            for price in prices:
+                if price.get("price_id") is None:
+                    continue
+                legacy_offers.append({
+                    "offer_id": price["price_id"],
+                    "vendor_id": price["supplier_id"],
+                    "vendor_name": price["supplier_name"],
+                    "package_size_base": price["package_size_base"],
+                    "package_price_irr": price["price_irr"],
+                    "min_packages": price["min_packages"],
+                    "package_step": price["package_step"],
+                    "stock_packages": price["stock_packages"],
+                    "lead_days": price["lead_days"],
+                    "invoice_status": price["invoice_status"],
+                    "tax_status": price["tax_status"],
+                    "valid_at": price["valid_at"],
+                    "source_url": price.get("source_url"),
+                    "source_label": price.get("source_label"),
+                    "raw_title": price.get("raw_title"),
+                    "raw_price_text": price.get("raw_price_text"),
+                    "field_status": price.get("field_status", {}),
+                    "price_status": price.get("price_status", "unknown"),
+                    "stock_status": price.get("stock_status", "unknown"),
+                    "availability_status": price.get("availability_status", "unknown"),
+                    "match_status": price.get("match_status", "unknown"),
+                    "provenance_ids": {
+                        "snapshot_id": price["source_snapshot_id"],
+                        "raw_record_id": price["source_record_id"],
+                    },
+                })
+            self._json(200, {
+                "snapshot_id": state.snapshot.get("id"),
+                "data_kind": state.snapshot.get("kind"),
+                "item": product,
+                "prices": prices,
+                "offers": legacy_offers,
+                "source_comparison": _source_comparison(prices),
+            })
+        elif path == "/api/suppliers":
+            self._json(200, {
+                "snapshot_id": state.snapshot.get("id"),
+                "suppliers": state.db.list_suppliers(),
+            })
         elif path == "/api/catalog/search":
             value = query.get("q", [""])[0]
             if not isinstance(value, str) or not value.strip():
@@ -258,6 +361,17 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             if snapshot_id != state.snapshot["id"]:
                 raise ApiError(409, "SNAPSHOT_MISMATCH", "Only the active snapshot is available")
             self._json(200, {"candidates": search_catalog(state.snapshot, value)})
+        elif path == "/api/catalog/decision":
+            value = query.get("q", [""])[0]
+            self._json(200, state.db.find_decision(value))
+        elif path.startswith("/api/catalog/decision/"):
+            context_id = path.removeprefix("/api/catalog/decision/").strip("/")
+            if not context_id or "/" in context_id:
+                raise ApiError(404, "DECISION_CONTEXT_NOT_FOUND", "Decision context was not found")
+            result = state.db.get_decision_context(context_id)
+            if result is None:
+                raise ApiError(404, "DECISION_CONTEXT_NOT_FOUND", f"Decision context {context_id} was not found")
+            self._json(200, result)
         elif path.startswith("/api/rfqs/") and path.endswith("/matches"):
             rfq_id = path[len("/api/rfqs/"):-len("/matches")].strip("/")
             record = self._rfq(rfq_id)
@@ -271,7 +385,26 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             offer_id = path[len("/api/offers/"):-len("/provenance")].strip("/")
             offer = next((item for item in state.snapshot["offers"] if item.get("id") == offer_id), None)
             if offer is None:
-                raise ApiError(404, "OFFER_NOT_FOUND", f"Offer {offer_id} was not found")
+                market_price = next((item for item in state.snapshot.get("market_prices", []) if item.get("id") == offer_id), None)
+                if market_price is None:
+                    raise ApiError(404, "OFFER_NOT_FOUND", f"Offer {offer_id} was not found")
+                vendor = next((item for item in state.snapshot["vendors"] if item.get("id") == market_price.get("supplier_id")), None)
+                item = next((entry for entry in state.snapshot["catalog"] if entry.get("id") == market_price.get("product_id")), None)
+                raw = {
+                    "id": market_price.get("source_record_id"),
+                    "source_label": market_price.get("source_label", "torob_search_capture"),
+                    "generated_at": market_price.get("valid_at"),
+                    "captured_at": market_price.get("captured_at", market_price.get("valid_at")),
+                    "raw_title": market_price.get("raw_title"),
+                    "raw_price_text": market_price.get("raw_price_text"),
+                    "source_url": market_price.get("source_url"),
+                    "field_status": market_price.get("field_status", {}),
+                    "price_status": market_price.get("price_status", "unknown"),
+                    "stock_status": market_price.get("stock_status", "unknown"),
+                    "availability_status": market_price.get("availability_status", "unknown"),
+                }
+                self._json(200, {"offer": market_price, "raw": raw, "vendor": vendor, "catalog_item": item})
+                return
             raw = next((item for item in state.snapshot["raw_offers"] if item.get("id") == offer.get("raw_record_id")), None)
             vendor = next((item for item in state.snapshot["vendors"] if item.get("id") == offer.get("vendor_id")), None)
             item = next((entry for entry in state.snapshot["catalog"] if entry.get("id") == offer.get("catalog_item_id")), None)
@@ -292,6 +425,15 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
         parts = urlsplit(self.path)
         try:
             body = self._body()
+            if parts.path.startswith("/api/catalog/decision/") and parts.path.endswith("/answers"):
+                context_id = parts.path[len("/api/catalog/decision/"):-len("/answers")].strip("/")
+                if not context_id or "/" in context_id:
+                    raise ApiError(404, "DECISION_CONTEXT_NOT_FOUND", "Decision context was not found")
+                answers = body.get("answers", {})
+                if not isinstance(answers, dict):
+                    raise ApiError(422, "INVALID_DECISION", "answers must be a JSON object")
+                self._json(200, self.server.state.db.answer_decision(context_id, answers))
+                return
             if parts.path == "/api/rfqs":
                 rfq = _validate_rfq_payload(body)
                 resolved = self._resolve(rfq)
@@ -363,18 +505,30 @@ class DemoHTTPServer(ThreadingHTTPServer):
         super().__init__(address, DemoRequestHandler)
         self.state = state
 
+    def server_close(self) -> None:
+        if hasattr(self, "state"):
+            self.state.db.close()
+        super().server_close()
 
-def create_server(host: str = "127.0.0.1", port: int = 8000, *, snapshot: dict[str, Any] | None = None) -> DemoHTTPServer:
+
+def create_server(
+    host: str = "127.0.0.1",
+    port: int = 8000,
+    *,
+    snapshot: dict[str, Any] | None = None,
+    db_path: str | Path = ":memory:",
+) -> DemoHTTPServer:
     """Create a loopback server without starting its event loop."""
-    return DemoHTTPServer((host, port), DemoState(snapshot))
+    return DemoHTTPServer((host, port), DemoState(snapshot, db_path))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the local Torob Business API")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--db", default=str(Path(__file__).resolve().parents[2] / "data" / "torob_business.sqlite3"))
     args = parser.parse_args()
-    server = create_server(args.host, args.port)
+    server = create_server(args.host, args.port, db_path=args.db)
     print(f"Torob Business available at http://{args.host}:{server.server_port}")
     try:
         server.serve_forever()

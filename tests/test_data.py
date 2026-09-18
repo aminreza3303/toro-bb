@@ -19,12 +19,45 @@ class DemoDataTests(unittest.TestCase):
         data = self.snapshot
         self.assertEqual(data["id"], "demo-v1")
         self.assertEqual(data["kind"], "synthetic")
-        self.assertEqual(len({item["category"] for item in data["catalog"]}), 2)
+        self.assertEqual({item["category"] for item in data["catalog"]},
+                         {"نوشت‌افزار", "دفتر و کاغذ و مقوا", "ماوس", "صندلی اداری", "مانیتور", "کیبورد", "هارد و SSD", "پرینتر"})
+        self.assertTrue(all(item.get("category_path") for item in data["catalog"]))
+        self.assertEqual({item["category_path"][0] for item in data["catalog"]},
+                         {"کتاب، لوازم تحریر و هنر", "لپ‌تاپ، کامپیوتر، اداری", "مبلمان و دکوراسیون اداری"})
         self.assertGreaterEqual(len(data["vendors"]), 5)
         self.assertLessEqual(len(data["vendors"]), 10)
-        self.assertTrue(all(vendor["synthetic"] for vendor in data["vendors"]))
+        self.assertTrue(all(vendor["synthetic"] for vendor in data["vendors"] if vendor["id"] not in {"v-torob", "digikala"}))
+        self.assertFalse(next(vendor for vendor in data["vendors"] if vendor["id"] == "v-torob")["synthetic"])
+        self.assertFalse(next(vendor for vendor in data["vendors"] if vendor["id"] == "digikala")["synthetic"])
+        self.assertEqual(len(data["market_prices"]), 43)
+        self.assertGreaterEqual(len(data["decision_layer"]["contexts"]), 5)
+        self.assertGreaterEqual(len(data["decision_layer"]["profiles"]), 12)
+        self.assertTrue(any(profile["fitment_status"] == "needs_check" for profile in data["decision_layer"]["profiles"]))
         self.assertEqual({row["source_format"] for row in data["raw_offers"]}, {"listing_rows", "vendor_cards"})
         self.assertEqual(len(data["raw_offers"]), len(data["offers"]))
+
+    def test_digikala_rows_keep_raw_provenance_and_unknown_values(self):
+        rows = [row for row in self.snapshot["market_prices"] if row["supplier_id"] == "digikala"]
+        self.assertEqual(len(rows), 5)
+        self.assertEqual({row["match_status"] for row in rows}, {"exact"})
+        self.assertEqual({row["price_irr"] for row in rows}, {None})
+        self.assertEqual({row["raw_price_text"] for row in rows}, {"ناموجود"})
+        self.assertTrue(all(row["source_url"].startswith("https://b2b.digikala.com/api/v1/products") for row in rows))
+        self.assertTrue(all(row["captured_at"] and row["valid_at"] for row in rows))
+        self.assertTrue(all(row["field_status"]["stock_packages"] == "not_reported" for row in rows))
+
+    def test_marketplace_model_mismatch_is_quarantined(self):
+        source_path = Path(__file__).resolve().parents[1] / "data" / "demo_raw.json"
+        source = json.loads(source_path.read_text(encoding="utf-8"))
+        row = next(row for row in source["market_catalog"]["prices"] if row["supplier_id"] == "digikala")
+        row["raw_title"] = "هارد اکسترنال وسترن دیجیتال مدل Elements ظرفیت 4 ترابایت"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "variant.json"
+            path.write_text(json.dumps(source, ensure_ascii=False), encoding="utf-8")
+            variant = load_dataset(path)
+        self.assertNotIn(row["id"], {price["id"] for price in variant["market_prices"]})
+        rejected = next(price for price in variant["rejected_market_prices"] if price["id"] == row["id"])
+        self.assertEqual(rejected["rejection_reason"], "SKU_MISMATCH")
 
     def test_provenance_survives_normalization(self):
         data = self.snapshot

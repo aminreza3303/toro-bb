@@ -14,6 +14,8 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
+from .matching import exact_sku_match
+
 
 _DIGITS = str.maketrans("۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩", "01234567890123456789")
 _HARAKAT = re.compile(r"[\u064b-\u065f\u0670]")
@@ -211,6 +213,23 @@ def _normalize(record: dict[str, Any], catalog: list[dict[str, Any]], vendors: d
         "lead_days": lead_days,
         "invoice_status": invoice_status,
         "tax_status": tax_status,
+        "source_label": record["source_label"],
+        "source_url": record.get("source_url"),
+        "raw_title": record["raw_title"],
+        "raw_price_text": record["raw_price_text"],
+        "price_status": "observed" if price is not None else "unknown",
+        "stock_status": "observed" if stock_packages is not None else "not_reported",
+        "availability_status": "observed" if stock_packages is not None else "unknown",
+        "match_status": "not_evaluated",
+        "field_status": {
+            "price_irr": "observed" if price is not None else "unknown",
+            "raw_price_text": "observed",
+            "stock_packages": "observed" if stock_packages is not None else "not_reported",
+            "package_size_base": "observed" if package_size is not None else "unknown",
+            "lead_days": "observed" if lead_days is not None else "not_reported",
+            "source_url": "observed" if record.get("source_url") else "not_reported",
+            "captured_at": "observed",
+        },
         "valid_at": record["generated_at"],
         "normalization_status": "rejected" if reasons else "accepted",
         "rejection_reason": reasons[0] if reasons else None,
@@ -262,9 +281,60 @@ def _raw_records(document: dict[str, Any], snapshot_id: str) -> list[dict[str, A
             "raw_unit_text": unit,
             "raw_terms": terms,
             "raw_payload": entry,
+            "source_url": document.get("source_url") or entry.get("source_url"),
             "payload_hash": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
         })
     return output
+
+
+def _normalize_market_price(
+    price: dict[str, Any],
+    catalog: list[dict[str, Any]],
+    vendors: dict[str, dict[str, Any]],
+    snapshot_id: str,
+    default_source_label: str,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Keep auditable marketplace rows and quarantine non-exact SKU matches."""
+    normalized = dict(price)
+    product_id = normalized.get("product_id")
+    supplier_id = normalized.get("supplier_id")
+    item = next((entry for entry in catalog if entry.get("id") == product_id), None)
+    supplier = vendors.get(supplier_id)
+    is_digikala = supplier_id == "digikala" or normalized.get("source_label") == "digikala_business_capture"
+    if not product_id or item is None or not supplier_id or supplier is None:
+        normalized["match_status"] = "rejected_invalid_reference"
+        normalized["rejection_reason"] = "UNKNOWN_PRODUCT_OR_SUPPLIER"
+        return None, normalized
+    if is_digikala and (
+        normalized.get("match_status") != "exact"
+        or not exact_sku_match(item, normalized.get("raw_title", ""))
+    ):
+        normalized["match_status"] = "rejected_model_mismatch"
+        normalized["rejection_reason"] = "SKU_MISMATCH"
+        return None, normalized
+
+    normalized.setdefault("source_snapshot_id", snapshot_id)
+    normalized.setdefault("source_label", default_source_label)
+    normalized.setdefault("valid_at", normalized.get("captured_at"))
+    normalized.setdefault("source_record_id", normalized.get("id"))
+    normalized.setdefault("raw_title", None)
+    normalized.setdefault("raw_price_text", None)
+    normalized.setdefault("price_status", "observed" if normalized.get("price_irr") is not None else "unknown")
+    if normalized.get("price_irr") == 0:
+        normalized["price_irr"] = None
+        normalized["price_status"] = "unavailable"
+    normalized.setdefault("stock_status", "not_reported")
+    normalized.setdefault("availability_status", "observed" if normalized.get("is_available", True) else "unavailable")
+    normalized.setdefault("field_status", {
+        "price_irr": normalized.get("price_status", "unknown"),
+        "raw_price_text": "observed" if normalized.get("raw_price_text") is not None else "not_reported",
+        "stock_packages": normalized.get("stock_status", "not_reported"),
+        "package_size_base": "observed" if normalized.get("package_size_base") is not None else "not_reported",
+        "lead_days": "observed" if normalized.get("lead_days") is not None else "not_reported",
+        "source_url": "observed" if normalized.get("source_url") else "not_reported",
+        "captured_at": "observed" if normalized.get("valid_at") else "not_reported",
+    })
+    return normalized, None
 
 
 def load_dataset(path: str | Path) -> dict[str, Any]:
@@ -274,8 +344,9 @@ def load_dataset(path: str | Path) -> dict[str, Any]:
     if source.get("kind") != "synthetic":
         raise ValueError("this importer currently accepts only explicit synthetic snapshots")
     snapshot_id = source["id"]
-    catalog = source["catalog"]
-    vendors = source["vendors"]
+    market_catalog = source.get("market_catalog") or {}
+    catalog = [*source["catalog"], *market_catalog.get("products", [])]
+    vendors = [*source["vendors"], *market_catalog.get("vendors", [])]
     documents = source["source_documents"]
     if len({item["id"] for item in catalog}) != len(catalog):
         raise ValueError("duplicate catalog IDs")
@@ -289,7 +360,30 @@ def load_dataset(path: str | Path) -> dict[str, Any]:
     result = {key: source[key] for key in ("id", "version", "captured_at", "kind", "rules_version")}
     canonical_payload = json.dumps(source, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     result["content_hash"] = hashlib.sha256(canonical_payload.encode("utf-8")).hexdigest()
-    result.update({"catalog": catalog, "vendors": vendors, "raw_offers": raw_offers, "offers": offers})
+    market_prices: list[dict[str, Any]] = []
+    rejected_market_prices: list[dict[str, Any]] = []
+    for market_price in market_catalog.get("prices", []):
+        normalized_market, rejected_market = _normalize_market_price(
+            market_price,
+            catalog,
+            vendor_index,
+            snapshot_id,
+            market_catalog.get("source_label", "market_capture"),
+        )
+        if normalized_market is not None:
+            market_prices.append(normalized_market)
+        if rejected_market is not None:
+            rejected_market_prices.append(rejected_market)
+    result.update({
+        "category_tree": source.get("category_tree", []),
+        "catalog": catalog,
+        "vendors": vendors,
+        "raw_offers": raw_offers,
+        "offers": offers,
+        "market_prices": market_prices,
+        "rejected_market_prices": rejected_market_prices,
+        "decision_layer": source.get("decision_layer", {}),
+    })
     return result
 
 
