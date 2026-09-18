@@ -56,14 +56,22 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(listing["snapshot_id"], "demo-v1")
         self.assertEqual(listing["data_kind"], "synthetic")
-        self.assertEqual(len(listing["items"]), 5)
+        self.assertEqual(len(listing["items"]), 40)
         pen = next(item for item in listing["items"] if item["catalog_item_id"] == "pen-blue-07")
         self.assertEqual(pen["accepted_offer_count"], 3)
         self.assertEqual(pen["lowest_package_price_irr"], 60_000)
         self.assertEqual(pen["lowest_comparable_base_unit_price_irr"], 10_000)
+        chair = next(item for item in listing["items"] if item["catalog_item_id"] == "chair-k713")
+        self.assertEqual(chair["priced_supplier_count"], 1)
+        self.assertEqual(chair["lowest_package_price_irr"], 45_900_000)
+        printer = next(item for item in listing["items"] if item["catalog_item_id"] == "printer-hp-laser-107a")
+        self.assertEqual(printer["priced_supplier_count"], 4)
+        self.assertEqual(printer["lowest_package_price_irr"], 178_000_000)
+        monitor = next(item for item in listing["items"] if item["catalog_item_id"] == "monitor-lg-u411-24")
+        self.assertEqual(monitor["lowest_package_price_irr"], 254_900_000)
 
     def test_catalog_storefront_filters_and_detail_excludes_rejected_offers(self):
-        status, filtered = self.request("GET", "/api/catalog/items?category=%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA%20IT&q=M100")
+        status, filtered = self.request("GET", "/api/catalog/items?category=%D9%85%D8%A7%D9%88%D8%B3&q=M100")
         self.assertEqual(status, 200)
         self.assertEqual([item["catalog_item_id"] for item in filtered["items"]], ["mouse-usb-m100"])
         status, detail = self.request("GET", "/api/catalog/items/pen-blue-07")
@@ -71,9 +79,93 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(detail["item"]["id"], "pen-blue-07")
         self.assertEqual({offer["offer_id"] for offer in detail["offers"]}, {"offer-grid-01", "offer-grid-03", "offer-card-01"})
         self.assertTrue(all(offer["vendor_name"] and offer["provenance_ids"]["raw_record_id"] for offer in detail["offers"]))
+        self.assertIn("prices", detail)
+        self.assertNotIn("digikala", {price["supplier_id"] for price in detail["prices"]})
+        status, chair = self.request("GET", "/api/catalog/items/chair-k713")
+        self.assertEqual(status, 200)
+        torob = next(price for price in chair["prices"] if price["supplier_id"] == "v-torob")
+        self.assertEqual(torob["price_irr"], 45_900_000)
+        self.assertIn("torob.com/search", torob["source_url"])
+        status, provenance = self.request("GET", f"/api/offers/{torob['offer_id']}/provenance")
+        self.assertEqual(status, 200)
+        self.assertEqual(provenance["raw"]["raw_price_text"], "از ۴٬۵۹۰٬۰۰۰ تومان")
+        status, printer = self.request("GET", "/api/catalog/items/printer-hp-laser-107a")
+        self.assertEqual(status, 200)
+        self.assertEqual(printer["item"]["name"], "پرینتر لیزری اچ‌پی مدل Laser 107a")
+        self.assertEqual({price["supplier_id"] for price in printer["prices"]}, {"digikala", "v-budget", "v-print", "v-it", "v-fast"})
+        cheapest = next(price for price in printer["prices"] if price["supplier_id"] == "v-budget")
+        self.assertEqual(cheapest["price_irr"], 178_000_000)
+        status, provenance = self.request("GET", f"/api/offers/{cheapest['offer_id']}/provenance")
+        self.assertEqual(status, 200)
+        self.assertEqual(provenance["raw"]["source_label"], "synthetic_fixture")
+        status, overlap = self.request("GET", "/api/catalog/items/ssd-verbatim-vi550-1tb")
+        self.assertEqual(status, 200)
+        self.assertEqual({group["supplier_id"] for group in overlap["source_comparison"]["sources"]}, {"digikala", "v-torob"})
+        digikala = next(price for price in overlap["prices"] if price["supplier_id"] == "digikala")
+        self.assertEqual(digikala["match_status"], "exact")
+        self.assertEqual(digikala["raw_price_text"], "ناموجود")
+        self.assertIsNone(digikala["stock_packages"])
+        self.assertEqual(overlap["source_comparison"]["overlap"], True)
+        status, provenance = self.request("GET", f"/api/offers/{digikala['offer_id']}/provenance")
+        self.assertEqual(status, 200)
+        self.assertEqual(provenance["raw"]["field_status"]["price_irr"], "unavailable")
         status, error = self.request("GET", "/api/catalog/items/not-a-sku")
         self.assertEqual(status, 404)
         self.assertEqual(error["error"]["code"], "CATALOG_ITEM_NOT_FOUND")
+
+    def test_supplier_endpoint_is_separate_and_includes_digikala(self):
+        status, response = self.request("GET", "/api/suppliers")
+        self.assertEqual(status, 200)
+        digikala = next(supplier for supplier in response["suppliers"] if supplier["id"] == "digikala")
+        self.assertEqual(digikala["name"], "دیجی کالا")
+        self.assertEqual(digikala["kind"], "marketplace")
+        self.assertEqual(digikala["price_count"], 0)
+        torob = next(supplier for supplier in response["suppliers"] if supplier["id"] == "v-torob")
+        self.assertEqual(torob["name"], "ترب")
+        self.assertEqual(torob["price_count"], 34)
+
+    def test_decision_layer_explains_variant_risk_before_price(self):
+        status, response = self.request("GET", "/api/catalog/decision?q=SSD")
+        self.assertEqual(status, 200)
+        self.assertEqual(response["status"], "ready")
+        self.assertEqual(response["context"]["id"], "computer-storage-selection")
+        self.assertTrue(response["context"]["questions"])
+        self.assertGreaterEqual(len(response["options"]), 3)
+        status, detail = self.request("GET", "/api/catalog/items/ssd-adlink-s20-1tb")
+        self.assertEqual(status, 200)
+        decision = detail["item"]["decision"]
+        self.assertEqual(decision["fitment_status"], "needs_check")
+        self.assertTrue(decision["claims"])
+        self.assertTrue(decision["supplier_evidence"])
+        self.assertTrue(decision["comparison"]["differences"])
+        status, context = self.request("GET", "/api/catalog/decision/computer-storage-selection")
+        self.assertEqual(status, 200)
+        self.assertEqual(context["context"]["id"], "computer-storage-selection")
+        self.assertEqual(len(context["options"]), 3)
+        status, answer = self.request(
+            "POST",
+            "/api/catalog/decision/computer-storage-selection/answers",
+            {"answers": {"storage_priority": "speed"}},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(answer["status"], "answered")
+        self.assertEqual(answer["selected_option_label"], "سرعت و دوام")
+
+    def test_decision_answer_rejects_unknown_option(self):
+        status, answer = self.request(
+            "POST",
+            "/api/catalog/decision/computer-storage-selection/answers",
+            {"answers": {"storage_priority": "not-an-option"}},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(answer["status"], "needs_answer")
+        status, answer = self.request(
+            "POST",
+            "/api/catalog/decision/computer-storage-selection/answers",
+            {"answers": {"storage_priority": []}},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(answer["status"], "needs_answer")
 
     def test_rfq_requires_two_lines_and_evaluates_after_matching(self):
         status, error = self.request("POST", "/api/rfqs", {"lines": [{"id": "one", "query_text": "خودکار آبی", "qty_base": 1}]})
@@ -85,13 +177,16 @@ class ServerTests(unittest.TestCase):
         payload = {
             "lines": [
                 {"id": "pen", "query_text": "خودکار آبی ۰٫۷", "qty_base": 13},
-                {"id": "mouse", "query_text": "ماوس باسیم M100", "qty_base": 2},
+                {"id": "mouse", "query_text": "ماوس باسیم M100", "qty_base": 2,
+                 "decision_context_id": "computer-peripheral-selection", "decision_answers": {"peripheral_connection": "wired"}},
             ],
             "preference": "lowest_cost",
         }
         status, rfq = self.request("POST", "/api/rfqs", payload)
         self.assertEqual(status, 201)
         self.assertEqual(rfq["status"], "ready")
+        self.assertEqual(self.server.state.rfqs[rfq["rfq_id"]]["rfq"]["lines"][1]["decision_context_id"], "computer-peripheral-selection")
+        self.assertEqual(self.server.state.rfqs[rfq["rfq_id"]]["rfq"]["lines"][1]["decision_answers"]["peripheral_connection"], "wired")
         status, run = self.request("POST", f"/api/rfqs/{rfq['rfq_id']}/evaluate", {"preference": "fastest_delivery"})
         self.assertEqual(status, 201)
         self.assertTrue(run["search_exhaustive"])
@@ -132,6 +227,10 @@ class ServerTests(unittest.TestCase):
 
     def test_serves_allowlisted_brand_logo_as_png(self):
         status, content_type, image = self.raw_request("GET", "/brand/torob-business-logo.png")
+        self.assertEqual(status, 200)
+        self.assertEqual(content_type, "image/png")
+        self.assertTrue(image.startswith(b"\x89PNG\r\n\x1a\n"))
+        status, content_type, image = self.raw_request("GET", "/brand/torob-business-logo-transparent.png")
         self.assertEqual(status, 200)
         self.assertEqual(content_type, "image/png")
         self.assertTrue(image.startswith(b"\x89PNG\r\n\x1a\n"))

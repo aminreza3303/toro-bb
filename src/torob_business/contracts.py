@@ -23,6 +23,7 @@ Preference = Literal["lowest_cost", "fastest_delivery"]
 class CatalogItem(TypedDict):
     id: str
     category: str
+    category_path: list[str]
     name: str
     aliases: list[str]
     base_unit: str

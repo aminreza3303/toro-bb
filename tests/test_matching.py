@@ -1,6 +1,6 @@
 import unittest
 
-from torob_business.matching import normalize_query, resolve_rfq, search_catalog
+from torob_business.matching import exact_sku_match, normalize_query, resolve_rfq, search_catalog
 
 
 SNAPSHOT = {
@@ -46,6 +46,12 @@ class MatchingTests(unittest.TestCase):
             resolve_rfq(SNAPSHOT, {"lines": [{
                 "id": "l1", "catalog_item_id": "pen-blue", "requested_specs": {"color": "black"}, "qty_base": 1,
             }]})
+
+    def test_exact_market_sku_requires_capacity(self):
+        item = {"specs": {"model": "S20", "capacity": "1TB"}}
+        self.assertTrue(exact_sku_match(item, "اس اس دی ادلینک مدل S20 ظرفیت 1 ترابایت"))
+        self.assertFalse(exact_sku_match(item, "اس اس دی ادلینک مدل S20 ظرفیت 512 گیگابایت"))
+        self.assertFalse(exact_sku_match(item, "اس اس دی ادلینک مدل S30 ظرفیت 1 ترابایت"))
 
 
 if __name__ == "__main__":
