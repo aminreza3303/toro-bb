@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import unicodedata
 
+from .offer_projection import rankable_catalog_ids, rankable_offer_counts
 
 _CHAR_MAP = str.maketrans(
     {
@@ -57,15 +58,7 @@ def search_catalog(snapshot: dict, query: str) -> list[dict]:
     needle = normalize_query(query)
     if not needle:
         return []
-    usable_counts: dict[str, int] = {}
-    for offer in snapshot.get("offers", []):
-        if offer.get("normalization_status") == "accepted":
-            sku = offer.get("catalog_item_id")
-            if sku:
-                usable_counts[sku] = usable_counts.get(sku, 0) + 1
-    for price in snapshot.get("market_prices", []):
-        if price.get("is_available", True) and price.get("product_id"):
-            usable_counts[price["product_id"]] = usable_counts.get(price["product_id"], 0) + 1
+    usable_counts = rankable_offer_counts(snapshot)
     found = []
     for item in snapshot.get("catalog", []):
         terms = {normalize_query(item["name"])}
@@ -94,6 +87,7 @@ def search_catalog(snapshot: dict, query: str) -> list[dict]:
 def resolve_rfq(snapshot: dict, rfq: dict) -> dict:
     """Resolve only explicit IDs or a single exact alias; surface all ambiguity."""
     catalog_by_id = {item["id"]: item for item in snapshot.get("catalog", [])}
+    rankable_ids = rankable_catalog_ids(snapshot)
     lines = rfq.get("lines", [])
     if not isinstance(lines, list) or not lines:
         raise ValueError("RFQ needs at least one line")
@@ -123,11 +117,23 @@ def resolve_rfq(snapshot: dict, rfq: dict) -> dict:
                 compatible_ids = exact_ids or {match["catalog_item_id"] for match in search_matches}
                 if selected not in compatible_ids:
                     raise ValueError(f"RFQ line {line_id} query is incompatible with {selected}")
+            if selected not in rankable_ids:
+                matches.append({
+                    "line_id": line_id,
+                    "status": "unmatched",
+                    "candidate_catalog_ids": [],
+                    "selected_catalog_id": None,
+                    "method": "no_rankable_offers",
+                })
+                continue
             status = "confirmed"
             candidates = [selected]
             method = "explicit_selection"
         else:
-            candidates_data = search_catalog(snapshot, line.get("query_text", ""))
+            candidates_data = [
+                candidate for candidate in search_catalog(snapshot, line.get("query_text", ""))
+                if candidate["catalog_item_id"] in rankable_ids
+            ]
             candidates = [c["catalog_item_id"] for c in candidates_data]
             exact = [c for c in candidates_data if c["match_kind"] == "exact"]
             if len(exact) == 1:

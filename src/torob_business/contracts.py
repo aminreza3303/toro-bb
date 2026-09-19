@@ -67,3 +67,33 @@ class RFQ(TypedDict):
     budget_irr: int | None
     max_lead_days: int | None
     requires_declared_invoice: bool
+
+
+class AgentSkillContract(TypedDict):
+    id: str
+    description: str
+    kind: str
+
+
+class AgentTraceContract(TypedDict):
+    agent_id: str
+    role: str
+    status: str
+    skills: list[str]
+    input_artifacts: list[str]
+    output_artifacts: list[str]
+    evidence_count: int
+    duration_ms: int
+    attempts: int
+    error: str | None
+
+
+class AgentAnalysis(TypedDict):
+    run_id: str
+    status: str
+    execution_mode: str
+    execution_plan: dict[str, object]
+    agent_count: int
+    trace: list[AgentTraceContract]
+    artifacts: dict[str, object]
+    quality_gates: dict[str, bool]

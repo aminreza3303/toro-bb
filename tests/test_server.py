@@ -69,6 +69,11 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(printer["lowest_package_price_irr"], 178_000_000)
         monitor = next(item for item in listing["items"] if item["catalog_item_id"] == "monitor-lg-u411-24")
         self.assertEqual(monitor["lowest_package_price_irr"], 254_900_000)
+        ssd = next(item for item in listing["items"] if item["catalog_item_id"] == "ssd-verbatim-vi550-1tb")
+        self.assertFalse(ssd["rfq_capable"])
+        printer = next(item for item in listing["items"] if item["catalog_item_id"] == "printer-hp-laser-107a")
+        self.assertTrue(printer["rfq_capable"])
+        self.assertEqual(printer["rankable_offer_count"], 4)
 
     def test_catalog_storefront_filters_and_detail_excludes_rejected_offers(self):
         status, filtered = self.request("GET", "/api/catalog/items?category=%D9%85%D8%A7%D9%88%D8%B3&q=M100")
@@ -112,6 +117,23 @@ class ServerTests(unittest.TestCase):
         status, error = self.request("GET", "/api/catalog/items/not-a-sku")
         self.assertEqual(status, 404)
         self.assertEqual(error["error"]["code"], "CATALOG_ITEM_NOT_FOUND")
+
+    def test_agent_manifest_and_product_analysis_are_exposed(self):
+        status, manifest = self.request("GET", "/api/agents/manifest")
+        self.assertEqual(status, 200)
+        self.assertEqual(manifest["runtime"]["mode"], "deterministic-local")
+        self.assertEqual(manifest["runtime"]["execution_plan"]["max_parallelism"], 2)
+        self.assertEqual(manifest["runtime"]["execution_plan"]["failure_mode"], "fail-closed")
+        self.assertEqual(len(manifest["agents"]), 5)
+        self.assertIn("exact-sku-guard", [skill["id"] for skill in manifest["agents"][0]["skills"]])
+        status, detail = self.request("GET", "/api/catalog/items/ssd-verbatim-vi550-1tb")
+        self.assertEqual(status, 200)
+        self.assertEqual(detail["agent_analysis"]["status"], "completed")
+        self.assertTrue(detail["agent_analysis"]["quality_gates"]["exact_sku_only"])
+        status, analysis = self.request("GET", "/api/agents/catalog/items/ssd-verbatim-vi550-1tb")
+        self.assertEqual(status, 200)
+        self.assertEqual(analysis["analysis"]["run_id"], detail["agent_analysis"]["run_id"])
+        self.assertEqual(analysis["analysis"]["execution_plan"]["layers"][1], ["provenance-auditor", "decision-context"])
 
     def test_supplier_endpoint_is_separate_and_includes_digikala(self):
         status, response = self.request("GET", "/api/suppliers")
@@ -194,6 +216,42 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(result["run_id"], run["run_id"])
         self.assertEqual(result["preference"], "fastest_delivery")
+
+    def test_demo_market_capture_can_rank_and_incomplete_capture_is_blocked_early(self):
+        printer_payload = {
+            "lines": [
+                {"id": "printer", "catalog_item_id": "printer-hp-laser-107a", "qty_base": 1},
+                {"id": "pen", "catalog_item_id": "pen-blue-07", "qty_base": 1},
+            ],
+            "preference": "lowest_cost",
+        }
+        status, rfq = self.request("POST", "/api/rfqs", printer_payload)
+        self.assertEqual(status, 201)
+        self.assertEqual(rfq["status"], "ready")
+        status, started = self.request("POST", f"/api/rfqs/{rfq['rfq_id']}/evaluate", {"preference": "lowest_cost"})
+        self.assertEqual(status, 201)
+        status, result = self.request("GET", f"/api/runs/{started['run_id']}")
+        self.assertEqual(status, 200)
+        self.assertEqual(result["status"], "ok")
+        printer = next(
+            assignment for combination in result["combinations"]
+            for assignment in combination["assignments"]
+            if assignment["catalog_item_id"] == "printer-hp-laser-107a"
+        )
+        self.assertTrue(printer["offer_id"].startswith("price-synthetic-printer"))
+        self.assertEqual(printer["provenance"]["source_label"], "synthetic_fixture")
+
+        blocked_payload = {
+            "lines": [
+                {"id": "ssd", "catalog_item_id": "ssd-verbatim-vi550-1tb", "qty_base": 1},
+                {"id": "pen", "catalog_item_id": "pen-blue-07", "qty_base": 1},
+            ],
+        }
+        status, blocked = self.request("POST", "/api/rfqs", blocked_payload)
+        self.assertEqual(status, 201)
+        self.assertEqual(blocked["status"], "needs_match")
+        ssd_match = next(match for match in blocked["matches"] if match["line_id"] == "ssd")
+        self.assertEqual(ssd_match["method"], "no_rankable_offers")
 
     def test_ambiguous_selection_must_be_candidate(self):
         payload = {"lines": [

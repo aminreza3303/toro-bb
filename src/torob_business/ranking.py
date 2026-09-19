@@ -13,6 +13,7 @@ import math
 from collections import defaultdict
 from typing import Any
 
+from .offer_projection import rankable_offers
 
 ALGORITHM_VERSION = "ranking-v1"
 _INCLUDED_TAX = {"included", "tax_included", "declared_included", "verified_included"}
@@ -77,6 +78,15 @@ def _validate_rfq(rfq: dict, max_combinations: int) -> None:
 
 def _provenance(offer: dict, raw_by_id: dict[str, dict], snapshot: dict) -> dict:
     raw = raw_by_id.get(offer.get("raw_record_id"), {})
+    if not raw:
+        raw = next(
+            (
+                price for price in snapshot.get("market_prices", [])
+                if price.get("source_record_id") == offer.get("raw_record_id")
+                or price.get("id") == offer.get("id")
+            ),
+            {},
+        )
     return {
         "snapshot_id": snapshot.get("id"),
         "raw_record_id": offer.get("raw_record_id"),
@@ -201,10 +211,7 @@ def evaluate(snapshot: dict, rfq: dict, max_combinations: int = 10000) -> dict:
     catalog_ids = {item["id"] for item in _records(snapshot.get("catalog")) if isinstance(item, dict) and "id" in item}
     vendors = {item["id"]: item for item in _records(snapshot.get("vendors")) if isinstance(item, dict) and "id" in item}
     raw_by_id = {item["id"]: item for item in _records(snapshot.get("raw_offers")) if isinstance(item, dict) and "id" in item}
-    offers = sorted(
-        (item for item in _records(snapshot.get("offers")) if isinstance(item, dict)),
-        key=lambda item: str(item.get("id", "")),
-    )
+    offers = sorted(rankable_offers(snapshot), key=lambda item: str(item.get("id", "")))
 
     groups_by_sku: dict[str, dict] = {}
     for line in rfq["lines"]:
@@ -241,7 +248,7 @@ def evaluate(snapshot: dict, rfq: dict, max_combinations: int = 10000) -> dict:
             if sku not in catalog_ids:
                 codes = ["UNKNOWN_CATALOG_ITEM"]
             elif not matching_offers:
-                codes = ["NO_OFFERS"]
+                codes = ["NO_RANKABLE_OFFERS"]
             else:
                 codes = sorted({code for entry in result["excluded_reasons"] if entry["catalog_item_id"] == sku for code in entry["reason_codes"]})
             result["uncovered_lines"].append({"line_ids": group["line_ids"], "catalog_item_id": sku, "reason_codes": codes})

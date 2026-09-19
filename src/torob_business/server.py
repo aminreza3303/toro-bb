@@ -17,9 +17,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
+from .agents import AgentRuntime, agent_manifest, build_source_comparison, run_agent_analysis
 from .data import load_demo
 from .database import CatalogDatabase
 from .matching import normalize_query, resolve_rfq, search_catalog
+from .offer_projection import rankable_catalog_ids, rankable_offer_counts
 from .ranking import evaluate
 
 
@@ -56,6 +58,7 @@ class DemoState:
         self.db.sync_snapshot(self.snapshot)
         self.rfqs: dict[str, dict[str, Any]] = {}
         self.runs: dict[str, dict[str, Any]] = {}
+        self.agent_runtime = AgentRuntime()
 
 
 def _metadata(snapshot: dict[str, Any], database: CatalogDatabase | None = None) -> dict[str, Any]:
@@ -107,47 +110,7 @@ def _lowest_prices(offers: list[dict[str, Any]]) -> tuple[int | None, int | None
 
 def _source_comparison(prices: list[dict[str, Any]]) -> dict[str, Any]:
     """Group supplier records without collapsing unknown marketplace fields."""
-    grouped: dict[str, dict[str, Any]] = {}
-    labels = {
-        "price_irr": "قیمت",
-        "stock_packages": "موجودی",
-        "lead_days": "زمان تحویل",
-        "package_size_base": "واحد بسته",
-        "invoice_status": "وضعیت فاکتور",
-    }
-    for price in prices:
-        supplier_id = price.get("supplier_id") or "unknown"
-        group = grouped.setdefault(supplier_id, {
-            "supplier_id": supplier_id,
-            "supplier_name": price.get("supplier_name") or supplier_id,
-            "supplier_kind": price.get("supplier_kind"),
-            "supplier_source": price.get("supplier_source"),
-            "source_labels": [],
-            "records": [],
-            "unknown_fields": [],
-            "sku_match_status": "unknown",
-        })
-        if price.get("source_label") and price["source_label"] not in group["source_labels"]:
-            group["source_labels"].append(price["source_label"])
-        group["records"].append(price)
-        if price.get("match_status") == "exact":
-            group["sku_match_status"] = "exact"
-        elif group["sku_match_status"] == "unknown" and price.get("match_status"):
-            group["sku_match_status"] = price["match_status"]
-        field_status = price.get("field_status", {})
-        for field, label in labels.items():
-            if price.get(field) is None or field_status.get(field) in {"unknown", "not_reported", "unavailable"}:
-                if label not in group["unknown_fields"]:
-                    group["unknown_fields"].append(label)
-    sources = list(grouped.values())
-    for group in sources:
-        group["record_count"] = len(group["records"])
-        group["source_urls"] = sorted({record["source_url"] for record in group["records"] if record.get("source_url")})
-    return {
-        "overlap": any(group["supplier_id"] == "digikala" for group in sources) and len(sources) > 1,
-        "sources": sources,
-        "unknown_differences": sorted({field for group in sources for field in group["unknown_fields"]}),
-    }
+    return build_source_comparison(prices)
 
 
 def _snapshot_catalog_listing(snapshot: dict[str, Any], query: str | None, category: str | None) -> list[dict[str, Any]]:
@@ -295,11 +258,31 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
         elif path == "/api/catalog/items":
             query_value = query.get("q", [None])[0]
             category_value = query.get("category", [None])[0]
+            rankable_counts = rankable_offer_counts(state.snapshot)
+            items = state.db.list_products(query_value, category_value)
+            for item in items:
+                item["rankable_offer_count"] = rankable_counts.get(item["catalog_item_id"], 0)
+                item["rfq_capable"] = item["rankable_offer_count"] > 0
+                item["rfq_block_reason"] = None if item["rfq_capable"] else "NO_RANKABLE_OFFERS"
             self._json(200, {
                 "snapshot_id": state.snapshot["id"],
                 "data_kind": state.snapshot.get("kind"),
                 "categories": state.snapshot.get("category_tree", []),
-                "items": state.db.list_products(query_value, category_value),
+                "items": items,
+            })
+        elif path == "/api/agents/manifest":
+            self._json(200, {"snapshot_id": state.snapshot.get("id"), **agent_manifest(state.agent_runtime)})
+        elif path.startswith("/api/agents/catalog/items/"):
+            catalog_item_id = path.removeprefix("/api/agents/catalog/items/")
+            if not catalog_item_id or "/" in catalog_item_id:
+                raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", "Catalog item was not found")
+            product = state.db.get_product(catalog_item_id)
+            if product is None:
+                raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", f"Catalog item {catalog_item_id} was not found")
+            self._json(200, {
+                "snapshot_id": state.snapshot.get("id"),
+                "item": product,
+                "analysis": run_agent_analysis(state.snapshot, product, state.agent_runtime),
             })
         elif path.startswith("/api/catalog/items/"):
             catalog_item_id = path.removeprefix("/api/catalog/items/")
@@ -308,6 +291,10 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             product = state.db.get_product(catalog_item_id)
             if product is None:
                 raise ApiError(404, "CATALOG_ITEM_NOT_FOUND", f"Catalog item {catalog_item_id} was not found")
+            rankable_counts = rankable_offer_counts(state.snapshot)
+            product["rankable_offer_count"] = rankable_counts.get(catalog_item_id, 0)
+            product["rfq_capable"] = catalog_item_id in rankable_catalog_ids(state.snapshot)
+            product["rfq_block_reason"] = None if product["rfq_capable"] else "NO_RANKABLE_OFFERS"
             prices = product.pop("prices", [])
             legacy_offers = []
             for price in prices:
@@ -347,6 +334,11 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                 "prices": prices,
                 "offers": legacy_offers,
                 "source_comparison": _source_comparison(prices),
+                "agent_analysis": run_agent_analysis(
+                    state.snapshot,
+                    {**product, "prices": prices},
+                    state.agent_runtime,
+                ),
             })
         elif path == "/api/suppliers":
             self._json(200, {

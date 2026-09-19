@@ -20,13 +20,13 @@ function renderLines(){ const root=$('#lines'); root.replaceChildren(...state.li
 function addLine(query='', qty='1'){ const line={id:`line-${++state.lineSeq}`,query,qty}; state.lines.push(line); renderLines(); }
 function removeLine(id){ if(state.lines.length<=2) return notice('درخواست باید حداقل دو قلم داشته باشد.','error'); state.lines=state.lines.filter(x=>x.id!==id); renderLines(); }
 let searchTimer;
-async function searchSuggestions(input, box, line){ clearTimeout(searchTimer); box.replaceChildren(); if(input.value.trim().length<2)return; searchTimer=setTimeout(async()=>{ try { const data=await api(`/api/catalog/search?q=${encodeURIComponent(input.value.trim())}${state.snapshotId?`&snapshot_id=${encodeURIComponent(state.snapshotId)}`:''}`); const candidates=data.candidates||[]; if(!candidates.length){box.append(el('div',{className:'suggestion-empty',text:'نامزدی پیدا نشد'}));return;} candidates.slice(0,6).forEach(item=>{ const b=el('button',{type:'button',className:'suggestion',role:'option'}); b.append(el('b',{text:item.title||item.name||item.catalog_item_id||'کالای بدون نام'}),el('small',{text:`${item.unit||item.base_unit||''} · ${fa(item.offer_count)} پیشنهاد`})); b.addEventListener('click',()=>{line.query=item.title||item.name||input.value; line.catalogItemId=item.catalog_item_id||item.id; input.value=line.query; box.replaceChildren();}); box.append(b); }); } catch(e){ /* search is progressive; submit still reports validation */ } },260); }
+async function searchSuggestions(input, box, line){ clearTimeout(searchTimer); box.replaceChildren(); if(input.value.trim().length<2)return; searchTimer=setTimeout(async()=>{ try { const data=await api(`/api/catalog/search?q=${encodeURIComponent(input.value.trim())}${state.snapshotId?`&snapshot_id=${encodeURIComponent(state.snapshotId)}`:''}`); const candidates=data.candidates||[]; if(!candidates.length){box.append(el('div',{className:'suggestion-empty',text:'نامزدی پیدا نشد'}));return;} candidates.slice(0,6).forEach(item=>{ const usable=(item.offer_count||0)>0; const b=el('button',{type:'button',className:`suggestion ${usable?'':'suggestion-disabled'}`,role:'option'}); b.append(el('b',{text:item.title||item.name||item.catalog_item_id||'کالای بدون نام'}),el('small',{text:usable?`${item.unit||item.base_unit||''} · ${fa(item.offer_count)} پیشنهاد`:'فقط برای مقایسهٔ منشأ؛ شرایط سفارش کامل نیست'})); if(usable)b.addEventListener('click',()=>{line.query=item.title||item.name||input.value; line.catalogItemId=item.catalog_item_id||item.id; input.value=line.query; box.replaceChildren();});else b.disabled=true; box.append(b); }); } catch(e){ /* search is progressive; submit still reports validation */ } },260); }
 function readForm(){ const budget=$('#budget').value.replace(/[^0-9۰-۹]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)); return {lines:state.lines.map(l=>({id:l.id,query_text:l.query,qty_base:Number(l.qty),catalog_item_id:l.catalogItemId||null,decision_context_id:l.decisionContextId||null,decision_answers:l.decisionAnswers||{}})), budget_irr:budget?Number(budget):null,max_lead_days:$('#lead').value?Number($('#lead').value):null,requires_declared_invoice:$('#invoice').checked,preference:$('input[name=preference]:checked').value}; }
 async function submitRFQ(e){e.preventDefault(); notice('در حال ثبت درخواست و تطبیق اقلام…'); const payload=readForm(); if(payload.lines.some(l=>!l.query_text.trim()||!Number.isInteger(l.qty_base)||l.qty_base<1)){notice('نام کالا و تعداد معتبر برای همهٔ اقلام لازم است.','error');return;} try { const data=await api('/api/rfqs',{method:'POST',body:JSON.stringify({snapshot_id:state.snapshotId,...payload})}); state.rfqId=data.rfq_id; state.snapshotId=data.snapshot_id||state.snapshotId; state.matches=data.matches||null; $('#form-view').hidden=true; $('#match-view').hidden=false; renderMatches(data.matches||[]); notice(''); window.scrollTo({top:0,behavior:'smooth'}); } catch(e){notice(e.message,'error');} }
-function renderMatches(matches){ const root=$('#matches'); root.replaceChildren(); const catalog=new Map((state.dataset?.catalog||[]).map(x=>[x.id,x])); (matches||[]).forEach(m=>{ const line=state.lines.find(x=>x.id===m.line_id); const box=el('article',{className:`match-item ${m.status}`}); const head=el('div',{className:'match-head'},[el('div',{className:'match-name',text:line?.query||m.line_id}),el('span',{className:`status status-${m.status}`,text:m.status==='confirmed'?'تأییدشده':m.status==='ambiguous'?'نیازمند انتخاب':'بدون تطبیق'})]); box.append(head); if(m.method)box.append(el('p',{className:'match-reason',text:m.status==='ambiguous'?'چند نامزد سازگار پیدا شد؛ یکی را انتخاب کن.':m.status==='unmatched'?'برای این عبارت کالای سازگار در مجموعهٔ فعال پیدا نشد.':`تطبیق با روش ${m.method} ثبت شد.`})); const candidates=m.candidate_catalog_ids||[]; if(m.status!=='confirmed'&&candidates.length){ const list=el('div',{className:'candidate-list'}); candidates.forEach(id=>{const c=catalog.get(id)||{id}; const label=el('label',{className:'candidate'}); const radio=el('input',{type:'radio',name:`match-${m.line_id}`,value:id}); radio.addEventListener('change',()=>m.selected=id); const categoryPath=(c.category_path||[c.category||'کاتالوگ']).join(' / '); label.append(radio,el('span',{},[el('b',{text:c.name||id}),el('small',{text:`${c.base_unit||''} · ${categoryPath}`} )])); list.append(label);}); box.append(list); } else if(m.selected_catalog_id) box.append(el('p',{className:'confirmed-sku',text:`SKU: ${m.selected_catalog_id}`})); root.append(box); }); }
+function renderMatches(matches){ const root=$('#matches'); root.replaceChildren(); const catalog=new Map((state.dataset?.catalog||[]).map(x=>[x.id,x])); (matches||[]).forEach(m=>{ const line=state.lines.find(x=>x.id===m.line_id); const box=el('article',{className:`match-item ${m.status}`}); const head=el('div',{className:'match-head'},[el('div',{className:'match-name',text:line?.query||m.line_id}),el('span',{className:`status status-${m.status}`,text:m.status==='confirmed'?'تأییدشده':m.status==='ambiguous'?'نیازمند انتخاب':'بدون تطبیق'})]); box.append(head); if(m.method)box.append(el('p',{className:'match-reason',text:m.status==='ambiguous'?'چند نامزد سازگار پیدا شد؛ یکی را انتخاب کن.':m.method==='no_rankable_offers'?'این کالا در دادهٔ دمو قیمت دارد، اما شرایط کامل موجودی/تحویل برای رتبه‌بندی ثبت نشده است.':m.status==='unmatched'?'برای این عبارت کالای قابل‌خرید در مجموعهٔ فعال پیدا نشد.':`تطبیق با روش ${m.method} ثبت شد.`})); const candidates=m.candidate_catalog_ids||[]; if(m.status!=='confirmed'&&candidates.length){ const list=el('div',{className:'candidate-list'}); candidates.forEach(id=>{const c=catalog.get(id)||{id}; const label=el('label',{className:'candidate'}); const radio=el('input',{type:'radio',name:`match-${m.line_id}`,value:id}); radio.addEventListener('change',()=>m.selected=id); const categoryPath=(c.category_path||[c.category||'کاتالوگ']).join(' / '); label.append(radio,el('span',{},[el('b',{text:c.name||id}),el('small',{text:`${c.base_unit||''} · ${categoryPath}`} )])); list.append(label);}); box.append(list); } else if(m.selected_catalog_id) box.append(el('p',{className:'confirmed-sku',text:`SKU: ${m.selected_catalog_id}`})); root.append(box); }); }
 async function runEvaluation(preference, showResults=true){ try { notice('در حال بررسی همهٔ ترکیب‌های ممکن…'); const started=await api(`/api/rfqs/${state.rfqId}/evaluate`,{method:'POST',body:JSON.stringify({snapshot_id:state.snapshotId,preference})}); state.runId=started.run_id; const result=await api(`/api/runs/${state.runId}`); renderResults(result); if(showResults){$('#match-view').hidden=true;$('#results-view').hidden=false;window.scrollTo({top:0,behavior:'smooth'});} notice(''); }catch(e){notice(e.message,'error');} }
 async function evaluate(){ const unresolved=(state.matches||[]).filter(m=>m.status!=='confirmed'&&!m.selected); if(unresolved.length){notice('برای ادامه، برای هر قلم مبهم یک SKU انتخاب کن.','error');return;} try { for(const m of state.matches||[]){if(m.selected) { const updated=await api(`/api/rfqs/${state.rfqId}/matches/${m.line_id}`,{method:'PUT',body:JSON.stringify({catalog_item_id:m.selected})}); m.status='confirmed'; m.selected_catalog_id=m.selected; if(updated.matches) state.matches=updated.matches; }} await runEvaluation($('input[name="preference"]:checked').value); }catch(e){notice(e.message,'error');} }
-function renderResults(result){ const combos=result.combinations||[]; const statusLabel=result.status==='ok'?'قابل بررسی':result.status==='no_full_coverage'?'پوشش کامل پیدا نشد':result.status==='search_limit'?'سقف جست‌وجو رد شد':'اجرای ناموفق'; $('#results-subtitle').textContent=`${result.search_exhaustive?'جست‌وجوی کامل':'جست‌وجوی محدود'} · ${fa(result.enumerated_combinations)} ترکیب بررسی شد · اولویت: ${result.preference==='fastest_delivery'?'سریع‌ترین تحویل':'کمترین هزینه'}`; $('#result-summary').replaceChildren(el('div',{className:'summary-chip'},[el('span',{text:'مجموعه قیمت'}),el('b',{text:'فعال'})]),el('div',{className:'summary-chip'},[el('span',{text:'وضعیت'}),el('b',{text:statusLabel})]),el('div',{className:'summary-chip'},[el('span',{text:'منبع'}),el('b',{text:'پیشنهادهای ثبت‌شده'})])); const root=$('#results'); root.replaceChildren(); combos.slice(0,8).forEach((c,i)=>root.append(comboCard(c,i,result.preference))); const uncovered=result.uncovered_lines||[]; const excluded=result.excluded_reasons||[]; $('#uncovered').hidden=!uncovered.length&&!excluded.length; if(!$('#uncovered').hidden){const box=$('#uncovered');box.replaceChildren(el('h3',{text:result.status==='search_limit'?'جست‌وجو به سقف مجاز رسید':'اقلام یا ترکیب‌های کنارگذاشته‌شده'})); uncovered.forEach(u=>box.append(el('p',{text:`${(u.line_ids||[]).join('، ')}: ${(u.reason_codes||[]).join('، ')}`}))); if(result.status==='search_limit')box.append(el('p',{text:'برای این درخواست هیچ رتبه‌ای تا کامل‌شدن جست‌وجو نمایش داده نمی‌شود.'}));} }
+function renderResults(result){ const combos=result.combinations||[]; const statusLabel=result.status==='ok'?'قابل بررسی':result.status==='no_full_coverage'?'پوشش کامل پیدا نشد':result.status==='search_limit'?'سقف جست‌وجو رد شد':'اجرای ناموفق'; $('#results-subtitle').textContent=`${result.search_exhaustive?'جست‌وجوی کامل':'جست‌وجوی محدود'} · ${fa(result.enumerated_combinations)} ترکیب بررسی شد · اولویت: ${result.preference==='fastest_delivery'?'سریع‌ترین تحویل':'کمترین هزینه'}`; $('#result-summary').replaceChildren(el('div',{className:'summary-chip'},[el('span',{text:'مجموعه قیمت'}),el('b',{text:'فعال'})]),el('div',{className:'summary-chip'},[el('span',{text:'وضعیت'}),el('b',{text:statusLabel})]),el('div',{className:'summary-chip'},[el('span',{text:'منبع'}),el('b',{text:'پیشنهادهای ثبت‌شده'})])); const root=$('#results'); root.replaceChildren(); combos.slice(0,8).forEach((c,i)=>root.append(comboCard(c,i,result.preference))); const uncovered=result.uncovered_lines||[]; const excluded=result.excluded_reasons||[]; const reasonLabels={NO_RANKABLE_OFFERS:'این کالا فقط دادهٔ مقایسه‌ای دارد و شرایط کامل رتبه‌بندی سفارش ثبت نشده است.',UNKNOWN_CATALOG_ITEM:'کالا در کاتالوگ فعال پیدا نشد.'}; $('#uncovered').hidden=!uncovered.length&&!excluded.length; if(!$('#uncovered').hidden){const box=$('#uncovered');box.replaceChildren(el('h3',{text:result.status==='search_limit'?'جست‌وجو به سقف مجاز رسید':'اقلام یا ترکیب‌های کنارگذاشته‌شده'})); uncovered.forEach(u=>box.append(el('p',{text:`${(u.line_ids||[]).join('، ')}: ${(u.reason_codes||[]).map(code=>reasonLabels[code]||code).join('، ')}`}))); if(result.status==='search_limit')box.append(el('p',{text:'برای این درخواست هیچ رتبه‌ای تا کامل‌شدن جست‌وجو نمایش داده نمی‌شود.'}));} }
 function comboCard(c,i,pref){ const card=el('article',{className:`combo-card ${i===0?'top':''}`}); const catalog=new Map((state.dataset?.catalog||[]).map(x=>[x.id,x])); const vendors=new Map((state.dataset?.vendors||[]).map(x=>[x.id,x])); const badge=i===0?el('span',{className:'best-badge',text:'پیشنهاد اول بر اساس ترجیح شما'}):el('span',{className:'rank',text:`رتبه ${fa(c.rank||i+1)}`}); const head=el('div',{className:'combo-head'},[badge,el('div',{className:'combo-total'},[el('small',{text:'جمع کل'}),el('strong',{text:money(c.total_irr)}),el('span',{text:`تحویل تا ${fa(c.max_lead_days)} روز`})])]); card.append(head); const reason=c.reason||c.reason_data||{}; let reasonText=reason.criterion==='max_lead_days'?`به‌دلیل زمان تحویل ${fa(c.max_lead_days)} روز انتخاب شده است.`:`به‌دلیل جمع کل ${money(c.total_irr)} در اولویت هزینه قرار گرفته است.`; if(reason.difference)reasonText+=` اختلاف با گزینهٔ مقایسه ${fa(reason.difference)} ${reason.difference_unit==='days'?'روز':'ریال'} است.`; card.append(el('p',{className:'reason',text:reasonText})); const table=el('div',{className:'assignment-table'}); table.append(el('div',{className:'table-row table-header'},[el('span',{text:'قلم'}),el('span',{text:'فروشنده'}),el('span',{text:'تعداد / اضافه'}),el('span',{text:'هزینه'})])); const invoiceStates=[]; (c.assignments||[]).forEach(a=>{const vendor=vendors.get(a.vendor_id); const item=catalog.get(a.catalog_item_id); if(a.invoice_status) invoiceStates.push(a.invoice_status); const row=el('div',{className:'table-row'},[el('span',{text:item?.name||a.catalog_item_id||a.line_ids?.join('، ')||'—'}),el('span',{text:vendor?.name||a.vendor_id||'—'}),el('span',{text:`${fa(a.covered_qty_base)} عدد / ${fa(a.overbuy_qty_base)} اضافه`}),el('span',{text:money(a.line_total_irr)})]); const offer=el('button',{type:'button',className:'provenance-link',text:'مشاهدهٔ منشأ'}); offer.addEventListener('click',()=>openProvenance(a.offer_id)); row.lastChild.append(offer); table.append(row);}); card.append(table); const invoiceLabel=invoiceStates.length&&invoiceStates.every(x=>x==='declared_yes'||x==='verified_yes')?'فاکتور: طبق اظهار فروشنده':invoiceStates.some(x=>x==='declared_no')?'فاکتور: برای برخی اقلام اعلام نشده':'فاکتور: وضعیت در داده ثبت نشده'; const foot=el('div',{className:'combo-foot'},[el('span',{text:`ارسال: ${money(c.shipping_total_irr)}`}),el('span',{text:`${fa(c.vendor_count)} فروشنده`}),el('span',{text:invoiceLabel})]); card.append(foot); return card; }
 async function openProvenance(id){
   try{
@@ -87,6 +87,7 @@ function showMainView(name){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function addCatalogItemToRequest(item, qty=1){
+  if(item.rfq_capable===false){notice('این کالا فقط برای مقایسهٔ منشأ ثبت شده و شرایط کامل رتبه‌بندی خرید را ندارد.','error');return;}
   let line=state.lines.find(entry=>!entry.query.trim());
   if(!line){line={id:`line-${++state.lineSeq}`,query:'',qty:'1'};state.lines.push(line);}
   line.query=item.name;line.qty=String(qty);line.catalogItemId=item.id;line.decisionContextId=shop.decisionContextId||null;line.decisionAnswers={...(shop.decisionAnswers||{})};
@@ -127,10 +128,12 @@ function renderCatalog(){
   items.forEach(item=>{
     const card=el('article',{className:'product-card'});
     card.append(productVisual(item));
-    const categoryPath=itemCategoryPath(item);const infoChildren=[el('span',{className:'product-category',text:categoryPath.join(' / ')}),el('h3',{text:item.name}),el('p',{text:`${fa(item.supplier_count||0)} تأمین‌کننده · ${fa(item.accepted_offer_count??0)} قیمت ثبت‌شده · واحد: ${item.base_unit||'عدد'}`})];if(item.decision_enabled)infoChildren.push(el('span',{className:'decision-card-hint',text:`راهنمای خرید: ${decisionStatusLabel(item.decision_status)}`}));const info=el('div',{className:'product-info'},infoChildren);
+    const categoryPath=itemCategoryPath(item);const infoChildren=[el('span',{className:'product-category',text:categoryPath.join(' / ')}),el('h3',{text:item.name}),el('p',{text:`${fa(item.supplier_count||0)} تأمین‌کننده · ${fa(item.accepted_offer_count??0)} قیمت ثبت‌شده · واحد: ${item.base_unit||'عدد'}`})];if(item.decision_enabled)infoChildren.push(el('span',{className:'decision-card-hint',text:`راهنمای خرید: ${decisionStatusLabel(item.decision_status)}`}));if(item.rfq_capable===false)infoChildren.push(el('span',{className:'catalog-readonly',text:'فقط مقایسهٔ منشأ؛ شرایط سفارش کامل نیست'}));const info=el('div',{className:'product-info'},infoChildren);
     const price=el('div',{className:'product-price'},[el('small',{text:'کمترین قیمت ثبت‌شده'}),el('strong',{text:cardPrice(item)})]);
     const actions=el('div',{className:'product-actions'});
-    actions.append(el('button',{type:'button',className:'button button-ghost',text:'مقایسهٔ تأمین‌کننده‌ها',on:{click:()=>openProduct(item.id)}}),el('button',{type:'button',className:'button button-primary',text:'افزودن به فهرست',on:{click:()=>addCatalogItemToRequest(item)}}));
+    actions.append(el('button',{type:'button',className:'button button-ghost',text:'مقایسهٔ تأمین‌کننده‌ها',on:{click:()=>openProduct(item.id)}}));
+    if(item.rfq_capable===false)actions.append(el('span',{className:'catalog-readonly-action',text:'برای مقایسهٔ قیمت و منشأ'}));
+    else actions.append(el('button',{type:'button',className:'button button-primary',text:'افزودن به فهرست',on:{click:()=>addCatalogItemToRequest(item)}}));
     card.append(info,price,actions);grid.append(card);
   });
 }
@@ -194,12 +197,62 @@ async function openProduct(id){
   showMainView('product-detail');
   $('#product-detail-loading').hidden=false;$('#product-detail-content').hidden=true;
   $('#product-decision-card').hidden=true;
+  $('#agent-analysis-card').hidden=true;
   try{
     const data=await api(`/api/catalog/items/${encodeURIComponent(id)}`);
     renderProductDetail(data);
   }catch(error){
     $('#product-detail-loading').replaceChildren(el('p',{className:'notice error',text:`جزئیات کالا بارگذاری نشد: ${error.message}`}));
   }
+}
+
+function renderAgentAnalysis(analysis){
+  const root=$('#agent-analysis-card');
+  const content=$('#agent-analysis-content');
+  if(!root||!content)return;
+  content.replaceChildren();
+  if(!analysis){root.hidden=true;return;}
+  const synthesis=analysis.artifacts?.synthesis||{};
+  const gates=analysis.quality_gates||synthesis.quality_gates||{};
+  const gateLabels={no_price_invention:'بدون ساختن قیمت',exact_sku_only:'فقط SKU دقیق',provenance_audited:'منشأ ممیزی شد'};
+  const plan=analysis.execution_plan||{};
+  const summary=el('div',{className:'agent-analysis-summary'},[
+    el('p',{text:synthesis.summary_fa||'خلاصه‌ای از شواهد ثبت‌شده در دسترس نیست.'}),
+    el('small',{text:`${analysis.execution_mode||'deterministic-local'} · شناسهٔ اجرا: ${analysis.run_id||'—'}`})
+  ]);
+  const executionPlan=el('section',{className:'agent-plan'},[
+    el('div',{className:'agent-plan-heading'},[
+      el('strong',{text:'برنامهٔ اجرا'}),
+      el('span',{text:`سقف هم‌زمانی ${fa(plan.max_parallelism||1)} · ${plan.failure_mode||'fail-closed'}`})
+    ]),
+    el('div',{className:'agent-plan-layers'},(plan.layers||[]).map((layer,index)=>el('div',{className:'agent-plan-row'},[
+      el('strong',{text:`لایهٔ ${fa(index)}`}),
+      el('span',{text:layer.join(' + ')})
+    ])))
+  ]);
+  const gateBox=el('div',{className:'agent-gates'},Object.entries(gateLabels).map(([key,label])=>el('span',{className:`agent-gate ${gates[key]?'passed':'failed'}`},[el('b',{text:gates[key]?'✓':'!'}),el('span',{text:`${label}: ${gates[key]?'تأیید':'نیازمند بررسی'}`})])));
+  const trace=el('div',{className:'agent-trace'});
+  (analysis.trace||[]).forEach(step=>{
+    const skills=(step.skills||[]).map(skill=>el('span',{className:'agent-skill-chip',text:skill}));
+    const row=el('article',{className:`agent-trace-row ${step.status==='completed'?'completed':'failed'}`},[
+      el('div',{className:'agent-trace-main'},[
+        el('div',{className:'agent-trace-title'},[el('strong',{text:step.agent_id}),el('span',{text:step.role})]),
+        el('div',{className:'agent-skills'},skills)
+      ]),
+      el('div',{className:'agent-trace-meta'},[
+        el('span',{text:step.status==='completed'?'کامل شد':'متوقف شد'}),
+        el('span',{text:`${fa(step.evidence_count||0)} شاهد · ${fa(step.attempts||1)} تلاش · ${fa(step.duration_ms||0)} ms`})
+      ])
+    ]);
+    trace.append(row);
+  });
+  content.append(summary,executionPlan,gateBox,el('div',{className:'agent-trace-heading'},[
+    el('strong',{text:'ردیابی اجرای عامل‌ها'}),
+    el('span',{text:`${fa(analysis.agent_count||0)} عامل در گراف وابستگی`})
+  ]),trace);
+  root.hidden=false;
+  $('#agent-analysis-status').textContent=analysis.status==='completed'?'اجرا کامل شد':'نیازمند بررسی';
+  $('#agent-analysis-status').className=`agent-status ${analysis.status==='completed'?'passed':'failed'}`;
 }
 
 function renderProductDetail(data){
@@ -233,8 +286,9 @@ function renderProductDetail(data){
     priceList.append(section);
   });
   const specs=$('#product-specs');specs.replaceChildren();const specLabels={brand:'برند',color:'رنگ',tip_mm:'ضخامت نوک (میلی‌متر)',model:'مدل',connection:'نوع اتصال',capacity:'ظرفیت',interface:'رابط',condition:'وضعیت کالا',type:'نوع کالا',backrest:'پشتی',size:'اندازه',weight_gsm:'گرماژ',sheets_per_ream:'تعداد برگ'};const specValues={wired_usb:'USB باسیم',wireless:'بی‌سیم',external_hdd:'هارد اکسترنال',blue:'آبی',black:'مشکی',used:'استوک'};const values={واحد:item.base_unit||'عدد',دسته:item.category||'—',...((item.specs&&typeof item.specs==='object')?item.specs:{})};Object.entries(values).forEach(([key,value])=>specs.append(el('div',{className:'spec'},[el('span',{text:specLabels[key]||key}),el('b',{text:Array.isArray(value)?value.map(v=>specValues[v]||v).join('، '):String(specValues[value] ?? value ?? '—')})])));
-  const qty=$('#product-detail-qty');const add=$('#product-detail-add');add.onclick=()=>{const count=Number(qty.value);if(!Number.isInteger(count)||count<1){qty.setCustomValidity('تعداد باید عدد صحیح مثبت باشد');qty.reportValidity();return;}qty.setCustomValidity('');addCatalogItemToRequest(item,count);};
+  const qty=$('#product-detail-qty');const add=$('#product-detail-add');if(item.rfq_capable===false){qty.disabled=true;add.disabled=true;add.textContent='فقط مقایسهٔ منشأ';add.title='شرایط کامل رتبه‌بندی سفارش ثبت نشده است';}else{qty.disabled=false;add.disabled=false;add.textContent='افزودن به فهرست خرید';add.title='';add.onclick=()=>{const count=Number(qty.value);if(!Number.isInteger(count)||count<1){qty.setCustomValidity('تعداد باید عدد صحیح مثبت باشد');qty.reportValidity();return;}qty.setCustomValidity('');addCatalogItemToRequest(item,count);};}
   renderProductDecision(data.item?.decision);
+  renderAgentAnalysis(data.agent_analysis);
   $('#product-detail-loading').hidden=true;$('#product-detail-content').hidden=false;
 }
 function renderProductDecision(decision){
