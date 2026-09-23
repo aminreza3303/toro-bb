@@ -1,4 +1,4 @@
-const state = { dataset: null, lineSeq: 0, lines: [], rfqId: null, snapshotId: null, runId: null, matches: null };
+const state = { dataset: null, manifest: null, lineSeq: 0, lines: [], rfqId: null, snapshotId: null, runId: null, matches: null };
 const nativeScrollTo = window.scrollTo.bind(window);
 window.scrollTo = (options, y) => {
   if (options && typeof options === 'object' && options.behavior === 'smooth' && matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -38,8 +38,63 @@ async function openProvenance(id){
     $('#provenance-dialog').showModal();
   }catch(e){notice(e.message,'error');}
 }
-async function loadDataset(){try{const d=await api('/api/datasets/active');state.dataset=d;const meta=d.metadata||{};state.snapshotId=meta.id||d.snapshot_id||d.id;$('#dataset-name').textContent='مجموعه قیمت‌های فعال';$('#dataset-meta').textContent=`${fa(d.counts?.catalog_items)} کالا · ${fa(d.counts?.vendors)} فروشنده`; }catch(e){$('#dataset-name').textContent='مجموعه قیمت‌ها';$('#dataset-meta').textContent='اطلاعات مجموعه در دسترس نیست';}}
-document.addEventListener('DOMContentLoaded',()=>{addLine();addLine();loadDataset();$('#add-line').addEventListener('click',()=>addLine());$('#rfq-form').addEventListener('submit',submitRFQ);$('#evaluate').addEventListener('click',evaluate);const backToForm=()=>{$('#match-view').hidden=true;$('#results-view').hidden=true;$('#form-view').hidden=false;notice('');window.scrollTo({top:0,behavior:'smooth'});};$('#edit-from-match').addEventListener('click',backToForm);$('#edit-request').addEventListener('click',backToForm);$('#close-dialog').addEventListener('click',()=>$('#provenance-dialog').close());$$('input[name=preference]').forEach(r=>r.addEventListener('change',()=>$$('.radio-card').forEach(x=>x.classList.toggle('active',x.querySelector('input').checked))));$$('.intent-button').forEach(button=>button.addEventListener('click',async()=>{const preference=button.dataset.preference;$$('.intent-button').forEach(x=>x.classList.toggle('active',x===button));await runEvaluation(preference,false);}));});
+async function loadDataset(){
+  try{
+    const d=await api('/api/datasets/active');
+    state.dataset=d;
+    const meta=d.metadata||{};
+    state.snapshotId=meta.id||d.snapshot_id||d.id;
+    $('#dataset-name').textContent='مجموعه قیمت‌های فعال';
+    $('#dataset-meta').textContent=`${fa(d.counts?.catalog_items)} کالا · ${fa(d.counts?.vendors)} فروشنده`;
+    $('#dataset-status').classList.remove('is-error');
+    $('#dataset-status-label').textContent='هستهٔ تصمیم فعال';
+    $('#header-snapshot').textContent=`snapshot ${state.snapshotId} · ${fa(d.counts?.accepted_offers)} پیشنهاد معتبر`;
+    $('#hero-snapshot').textContent=`snapshot: ${state.snapshotId}`;
+    $('#metric-catalog').textContent=fa(d.counts?.catalog_items);
+    $('#metric-vendors').textContent=fa(d.counts?.vendors);
+    $('#metric-prices').textContent=fa(d.counts?.prices);
+  }catch(e){
+    $('#dataset-name').textContent='مجموعه قیمت‌ها';
+    $('#dataset-meta').textContent='اطلاعات مجموعه در دسترس نیست';
+    $('#dataset-status').classList.add('is-error');
+    $('#dataset-status-label').textContent='داده در دسترس نیست';
+    $('#header-snapshot').textContent='snapshot در دسترس نیست';
+    $('#hero-snapshot').textContent='snapshot: unavailable';
+  }
+}
+
+async function loadSystemManifest(){
+  try{
+    const manifest=await api('/api/agents/manifest');
+    state.manifest=manifest;
+    $('#metric-agents').textContent=fa(manifest.agents?.length);
+    const registered=new Set((manifest.agents||[]).map(agent=>agent.id));
+    $$('.execution-graph [data-agent]').forEach(row=>{
+      const available=registered.has(row.dataset.agent);
+      row.querySelector('em').textContent=available?'REGISTERED':'MISSING';
+      row.classList.toggle('is-error',!available);
+    });
+    $('#runtime-status').classList.remove('is-error');
+    $('#runtime-status-label').textContent=`موتور تصمیم ${manifest.runtime?.mode||'آماده'}`;
+    $('#runtime-failure-mode').textContent=manifest.runtime?.execution_plan?.failure_mode||'—';
+    $('#runtime-parallelism').textContent=manifest.runtime?.execution_plan?.max_parallelism??'—';
+    $('#console-status').classList.remove('is-error');
+    $('#console-status').lastChild.textContent=' registry آماده';
+  }catch{
+    $('#metric-agents').textContent='—';
+    $('#runtime-status').classList.add('is-error');
+    $('#runtime-status-label').textContent='runtime در دسترس نیست';
+    $('#runtime-failure-mode').textContent='—';
+    $('#runtime-parallelism').textContent='—';
+    $('#console-status').classList.add('is-error');
+    $('#console-status').lastChild.textContent=' registry ناموجود';
+    $$('.execution-graph [data-agent]').forEach(row=>{
+      row.querySelector('em').textContent='UNKNOWN';
+      row.classList.add('is-error');
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{addLine();addLine();loadDataset();loadSystemManifest();$('#add-line').addEventListener('click',()=>addLine());$('#rfq-form').addEventListener('submit',submitRFQ);$('#evaluate').addEventListener('click',evaluate);const backToForm=()=>{$('#match-view').hidden=true;$('#results-view').hidden=true;$('#form-view').hidden=false;notice('');window.scrollTo({top:0,behavior:'smooth'});};$('#edit-from-match').addEventListener('click',backToForm);$('#edit-request').addEventListener('click',backToForm);$('#close-dialog').addEventListener('click',()=>$('#provenance-dialog').close());$$('input[name=preference]').forEach(r=>r.addEventListener('change',()=>$$('.radio-card').forEach(x=>x.classList.toggle('active',x.querySelector('input').checked))));$$('.intent-button').forEach(button=>button.addEventListener('click',async()=>{const preference=button.dataset.preference;$$('.intent-button').forEach(x=>x.classList.toggle('active',x===button));await runEvaluation(preference,false);}));});
 const _renderResults = renderResults;
 renderResults = function(result) {
   _renderResults(result);
@@ -75,7 +130,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // The catalog is the entry point; RFQ remains the second step of the journey.
-const shop = {items:[], categoryTree:[], categoryPath:[], query:'', decisionContextId:null, decisionAnswers:{}};
+const shop = {items:[], categoryTree:[], categoryPath:[], query:'', sort:'relevance', rankableOnly:false, page:1, pageSize:12, decisionContextId:null, decisionAnswers:{}};
 const normalizeSearch = value => String(value || '').toLocaleLowerCase('fa-IR').replace(/ي/g,'ی').replace(/ك/g,'ک').trim();
 const itemCategoryPath = item => Array.isArray(item.category_path) && item.category_path.length ? item.category_path : [item.category || 'کالا'];
 const samePrefix = (path, prefix) => prefix.every((part, index) => path[index] === part);
@@ -111,7 +166,7 @@ function renderCategoryFilters(){
   const walk=(nodes,prefix=[])=>{(nodes||[]).forEach(node=>{const path=[...prefix,node.name];treePaths.push(path);walk(node.children,path);});};
   walk(shop.categoryTree);
   const paths=treePaths.length?treePaths:[...new Map(shop.items.map(item=>{const path=itemCategoryPath(item);return [path.join(' / '),path];})).values()];
-  const makeChip=(label,path)=>{const active=samePrefix(shop.categoryPath,path)&&shop.categoryPath.length===path.length;const button=el('button',{type:'button',className:`filter-chip ${active?'active':''}`,text:label});button.setAttribute('aria-pressed',String(active));button.addEventListener('click',()=>{shop.categoryPath=path;renderCategoryFilters();renderCatalog();});return button;};
+  const makeChip=(label,path)=>{const active=samePrefix(shop.categoryPath,path)&&shop.categoryPath.length===path.length;const button=el('button',{type:'button',className:`filter-chip ${active?'active':''}`,text:label});button.setAttribute('aria-pressed',String(active));button.addEventListener('click',()=>{shop.categoryPath=path;shop.page=1;renderCategoryFilters();renderCatalog();});return button;};
   const childrenFor=prefix=>[...new Set(paths.filter(path=>samePrefix(path,prefix)).map(path=>path[prefix.length]).filter(Boolean))];
   const chips=[makeChip('همهٔ کالاها',[])];
   childrenFor([]).forEach(rootName=>chips.push(makeChip(rootName,[rootName])));
@@ -121,13 +176,29 @@ function renderCategoryFilters(){
   root.replaceChildren(...chips);
 }
 function renderCatalog(){
-  const q=normalizeSearch(shop.query);const items=shop.items.filter(item=>(!shop.categoryPath.length||samePrefix(itemCategoryPath(item),shop.categoryPath))&&(!q||normalizeSearch(`${item.name} ${item.id} ${(item.aliases||[]).join(' ')}`).includes(q)));
+  const q=normalizeSearch(shop.query);
+  let items=shop.items.filter(item=>(!shop.categoryPath.length||samePrefix(itemCategoryPath(item),shop.categoryPath))&&(!q||normalizeSearch(`${item.name} ${item.id} ${(item.aliases||[]).join(' ')}`).includes(q)));
+  if(shop.rankableOnly)items=items.filter(item=>item.rfq_capable!==false);
+  if(shop.sort==='sources')items.sort((a,b)=>(b.accepted_offer_count||0)-(a.accepted_offer_count||0)||(b.supplier_count||0)-(a.supplier_count||0));
+  if(shop.sort==='price-asc')items.sort((a,b)=>(a.lowest_package_price_irr??Infinity)-(b.lowest_package_price_irr??Infinity));
+  if(shop.sort==='price-desc')items.sort((a,b)=>(b.lowest_package_price_irr??-1)-(a.lowest_package_price_irr??-1));
+  const pages=Math.max(1,Math.ceil(items.length/shop.pageSize));
+  shop.page=Math.min(shop.page,pages);
+  const start=(shop.page-1)*shop.pageSize;
+  const visible=items.slice(start,start+shop.pageSize);
+  const end=Math.min(start+visible.length,items.length);
   $('#catalog-total').textContent=`${fa(items.length)} کالا`;
+  $('#catalog-range').textContent=items.length?`نمایش ${fa(start+1)} تا ${fa(end)} از ${fa(items.length)}`:'بدون نتیجه';
   $('#catalog-empty').hidden=items.length>0;
+  const pagination=$('#catalog-pagination');
+  pagination.hidden=items.length<=shop.pageSize;
+  $('#catalog-page-status').textContent=`صفحهٔ ${fa(shop.page)} از ${fa(pages)}`;
+  $('#catalog-prev').disabled=shop.page<=1;
+  $('#catalog-next').disabled=shop.page>=pages;
   const grid=$('#product-grid');grid.replaceChildren();
-  items.forEach(item=>{
+  visible.forEach(item=>{
     const card=el('article',{className:'product-card'});
-    card.append(productVisual(item));
+    card.append(el('span',{className:`product-health ${item.rfq_capable===false?'':'rankable'}`,text:item.rfq_capable===false?'فقط منشأ':'قابل رتبه‌بندی'}),productVisual(item));
     const categoryPath=itemCategoryPath(item);const infoChildren=[el('span',{className:'product-category',text:categoryPath.join(' / ')}),el('h3',{text:item.name}),el('p',{text:`${fa(item.supplier_count||0)} تأمین‌کننده · ${fa(item.accepted_offer_count??0)} قیمت ثبت‌شده · واحد: ${item.base_unit||'عدد'}`})];if(item.decision_enabled)infoChildren.push(el('span',{className:'decision-card-hint',text:`راهنمای خرید: ${decisionStatusLabel(item.decision_status)}`}));if(item.rfq_capable===false)infoChildren.push(el('span',{className:'catalog-readonly',text:'فقط مقایسهٔ منشأ؛ شرایط سفارش کامل نیست'}));const info=el('div',{className:'product-info'},infoChildren);
     const price=el('div',{className:'product-price'},[el('small',{text:'کمترین قیمت ثبت‌شده'}),el('strong',{text:cardPrice(item)})]);
     const actions=el('div',{className:'product-actions'});
@@ -311,10 +382,15 @@ function renderProductDecision(decision){
 document.addEventListener('DOMContentLoaded',()=>{
   $$('[data-view]').forEach(button=>button.addEventListener('click',()=>showMainView(button.dataset.view)));
   $('#brand-home').addEventListener('click',event=>{event.preventDefault();showMainView('business');});
-  $('#catalog-query').addEventListener('input',event=>{shop.query=event.target.value;$('#clear-catalog-query').hidden=!event.target.value;renderCatalog();loadDecision(event.target.value);});
-  $('#clear-catalog-query').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';$('#clear-catalog-query').hidden=true;renderCatalog();loadDecision('');$('#catalog-query').focus();});
-  $('#clear-catalog-search').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';shop.categoryPath=[];renderCategoryFilters();renderCatalog();loadDecision('');$('#catalog-query').focus();});
+  $('#catalog-query').addEventListener('input',event=>{shop.query=event.target.value;shop.page=1;$('#clear-catalog-query').hidden=!event.target.value;renderCatalog();loadDecision(event.target.value);});
+  $('#clear-catalog-query').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';shop.page=1;$('#clear-catalog-query').hidden=true;renderCatalog();loadDecision('');$('#catalog-query').focus();});
+  $('#clear-catalog-search').addEventListener('click',()=>{$('#catalog-query').value='';shop.query='';shop.categoryPath=[];shop.rankableOnly=false;shop.sort='relevance';shop.page=1;$('#catalog-rankable').checked=false;$('#catalog-sort').value='relevance';renderCategoryFilters();renderCatalog();loadDecision('');$('#catalog-query').focus();});
+  $('#catalog-rankable').addEventListener('change',event=>{shop.rankableOnly=event.target.checked;shop.page=1;renderCatalog();});
+  $('#catalog-sort').addEventListener('change',event=>{shop.sort=event.target.value;shop.page=1;renderCatalog();});
+  $('#catalog-prev').addEventListener('click',()=>{if(shop.page>1){shop.page-=1;renderCatalog();$('#catalog-title').scrollIntoView({behavior:'smooth',block:'start'});}});
+  $('#catalog-next').addEventListener('click',()=>{shop.page+=1;renderCatalog();$('#catalog-title').scrollIntoView({behavior:'smooth',block:'start'});});
   $('#business-start').addEventListener('click',()=>showMainView('workflow'));
+  $('#business-catalog').addEventListener('click',()=>showMainView('storefront'));
   $('#back-to-catalog').addEventListener('click',()=>showMainView('storefront'));
   loadCatalog();
 });
