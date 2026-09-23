@@ -15,7 +15,10 @@
 <body>
   <header class="topbar">
     <a class="brand" id="brand-home" href="#business-title" aria-label="صفحهٔ خرید سازمانی ترب‌بیزینس"><span class="brand-logo-panel"><img src="/brand/torob-business-logo-transparent.png" alt="نشان ترب‌بیزینس"></span><div><strong>ترب‌بیزینس</strong><small>از چند جا قیمت بگیر، بهتر تصمیم بگیر</small></div></a>
-    <div class="topbar-actions"><button id="theme-toggle" class="theme-toggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☾</button></div>
+    <div class="topbar-actions">
+      <div class="system-status" id="dataset-status" aria-live="polite"><span class="status-pulse" aria-hidden="true"></span><span><b id="dataset-status-label">در حال بررسی داده</b><small id="header-snapshot">در حال همگام‌سازی snapshot…</small></span></div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☾</button>
+    </div>
   </header>
   <nav class="site-nav" aria-label="بخش‌های سایت"><div class="site-nav-inner">
     <button type="button" class="nav-link active" data-view="business" aria-current="page">خرید سازمانی</button>
@@ -38,10 +41,16 @@
       <section class="catalog-section" aria-labelledby="catalog-title">
         <div class="section-heading"><div><p class="eyebrow">کاتالوگ کالاها</p><h2 id="catalog-title">کالاهای قابل‌مقایسه</h2><p>دسته‌بندی‌ها با نام‌گذاری رایج دیجی‌کالا و ترب، از ریشهٔ کالا تا زیر‌دستهٔ دقیق نمایش داده می‌شوند.</p></div><span id="catalog-total" class="catalog-total">در حال بارگذاری…</span></div>
         <div class="catalog-toolbar"><label class="catalog-search"><span>جست‌وجوی کالا یا مدل</span><div class="catalog-search-field"><span class="search-glyph" aria-hidden="true">⌕</span><input id="catalog-query" type="search" autocomplete="off" placeholder="مثلاً ماوس USB یا کاغذ A4 را جست‌وجو کنید"><button type="button" id="clear-catalog-query" class="clear-search" aria-label="پاک کردن جست‌وجو" hidden>×</button></div></label><div id="category-filters" class="category-filters" role="group" aria-label="دسته‌بندی کالاها؛ ابتدا ریشه و سپس زیر‌دسته را انتخاب کنید"></div></div>
+        <div class="catalog-commandbar" aria-label="کنترل نمایش کاتالوگ">
+          <label class="catalog-check"><input id="catalog-rankable" type="checkbox"><span aria-hidden="true"></span><b>فقط کالاهای قابل‌رتبه‌بندی</b></label>
+          <label class="catalog-sort"><span>مرتب‌سازی</span><select id="catalog-sort"><option value="relevance">پیشنهادی</option><option value="sources">بیشترین منبع</option><option value="price-asc">کمترین قیمت</option><option value="price-desc">بیشترین قیمت</option></select></label>
+          <span id="catalog-range" class="catalog-range" aria-live="polite"></span>
+        </div>
         <section id="decision-helper" class="decision-helper" hidden aria-live="polite" aria-labelledby="decision-helper-title"></section>
         <div id="catalog-error" class="notice error" role="status" hidden></div>
         <div id="product-grid" class="product-grid"><p class="catalog-loading">در حال بارگذاری کاتالوگ کالاها…</p></div>
         <div id="catalog-empty" class="catalog-empty" hidden><h3>کالایی پیدا نشد</h3><p>عبارت جست‌وجو یا دسته‌بندی را تغییر دهید.</p><button type="button" id="clear-catalog-search" class="button button-ghost">نمایش همهٔ کالاها</button></div>
+        <nav id="catalog-pagination" class="catalog-pagination" aria-label="صفحه‌بندی کاتالوگ" hidden><button id="catalog-prev" type="button" class="button button-ghost">صفحهٔ قبل</button><span id="catalog-page-status"></span><button id="catalog-next" type="button" class="button button-ghost">صفحهٔ بعد</button></nav>
       </section>
 
       <section class="storefront-benefits" aria-label="مزیت‌ها"><article><span>۱</span><h3>فهرست چندقلمی</h3><p>چند کالا را در یک درخواست کنار هم بررسی کنید.</p></article><article><span>۲</span><h3>قیمت قابل‌مقایسه</h3><p>بسته‌بندی، تعداد و ارسال در جمع کل لحاظ می‌شوند.</p></article><article><span>۳</span><h3>تصمیم قابل‌ردیابی</h3><p>منشأ هر پیشنهاد و دلیل رتبه‌بندی را ببینید.</p></article></section>
@@ -83,9 +92,45 @@
     </section>
 
     <section id="business-view" class="business-view" aria-labelledby="business-title">
-      <div class="business-hero"><p class="eyebrow">خرید سازمانی از چند منبع</p><h1 id="business-title">برای سازمانت از چند جا قیمت بگیر.</h1><p>فهرست خریدت را یک‌جا بنویس؛ ترب‌بیزینس پیشنهادهای چند تأمین‌کننده را کنار هم می‌آورد تا قیمت، بسته‌بندی، زمان تحویل و شرایط فاکتور را در یک نگاه مقایسه کنی.</p><button type="button" class="button button-primary" id="business-start">ساخت فهرست خرید</button></div>
-      <div class="business-capabilities"><article class="business-capability"><img src="/landing-icons/shopping-cart.png" alt="" loading="lazy" decoding="async"><b>جمع‌آوری قیمت</b><p>برای هر قلم، پیشنهادهای چند فروشنده را در یک مسیر ببین.</p></article><article class="business-capability"><img src="/landing-icons/discount-tag.png" alt="" loading="lazy" decoding="async"><b>مقایسهٔ یک‌جا</b><p>قیمت بسته، تعداد، تحویل و حداقل خرید را کنار هم بخوان.</p></article><article class="business-capability"><img src="/landing-icons/pricelist.png" alt="" loading="lazy" decoding="async"><b>فهرست مشترک</b><p>چند قلم از لوازم اداری تا تجهیزات IT را در یک درخواست جمع کن.</p></article><article class="business-capability"><img src="/landing-icons/warehouse.png" alt="" loading="lazy" decoding="async"><b>منشأ روشن</b><p>ببین هر عدد و پیشنهاد از کدام رکورد و مجموعهٔ فعال آمده است.</p></article></div>
-      <div class="business-paths"><div><p class="eyebrow">ورود کسب‌وکارها</p><h2>دو مسیر برای خرید سازمانی</h2><p>ثبت شرکت و پروانهٔ کسب دو مسیر روشن برای شروع همکاری و مدیریت فهرست‌های خرید هستند.</p></div><article><strong>شرکت ثبت‌شده</strong><p>نمایهٔ حقوقی و کاربران تیم خرید را برای مدیریت سفارش‌ها و پیش‌فاکتورهای سازمانی تعریف کنید.</p><span>برای تیم‌های سازمانی</span></article><article><strong>دارندهٔ پروانهٔ کسب</strong><p>مسیر ساده برای کسب‌وکارهای کوچک، با همان مقایسهٔ شفاف پیشنهادها.</p><span>راه‌اندازی سریع</span></article></div>
+      <div class="business-command">
+        <div class="business-hero">
+          <div class="hero-runtime" id="runtime-status"><span class="status-pulse" aria-hidden="true"></span><span id="runtime-status-label">در حال بررسی runtime…</span><code id="hero-snapshot">snapshot: —</code></div>
+          <p class="eyebrow">زیرساخت تصمیم برای تیم خرید</p>
+          <h1 id="business-title">از فهرست خرید تا تصمیم قابل‌دفاع.</h1>
+          <p>قیمت فقط یک عدد نیست. ترب‌بیزینس SKU، بسته‌بندی، موجودی، زمان تحویل، حداقل سفارش و منشأ هر پیشنهاد را قبل از رتبه‌بندی بررسی می‌کند.</p>
+          <div class="business-actions"><button type="button" class="button button-primary" id="business-start">ساخت درخواست خرید</button><button type="button" class="button button-on-dark" id="business-catalog">دیدن داده‌های قابل‌مقایسه</button></div>
+          <div class="hero-guarantees" aria-label="تضمین‌های هستهٔ تصمیم"><span>✓ بدون قیمت ساختگی</span><span>✓ فقط SKU دقیق</span><span>✓ منشأ قابل‌ممیزی</span></div>
+        </div>
+        <aside class="engine-console" aria-label="نمای اجرای موتور تصمیم">
+          <div class="console-head"><div><span class="console-kicker">EXECUTION GRAPH</span><strong>از دادهٔ خام تا پیشنهاد</strong></div><span class="console-live" id="console-status" aria-live="polite"><i></i> در حال بررسی</span></div>
+          <ol class="execution-graph">
+            <li data-agent="sku-guardian"><span>۰۱</span><div><b>sku-guardian</b><small>تطبیق دقیق مدل و variant</small></div><em>PENDING</em></li>
+            <li data-agent="provenance-auditor"><span>۰۲</span><div><b>provenance-auditor</b><small>URL، زمان برداشت و متن خام</small></div><em>PENDING</em></li>
+            <li data-agent="source-comparator"><span>۰۳</span><div><b>source-comparator</b><small>جداسازی منبع و حفظ unknown</small></div><em>PENDING</em></li>
+            <li data-agent="synthesis"><span>۰۴</span><div><b>synthesis</b><small>خلاصهٔ محدود به شواهد</small></div><em>PENDING</em></li>
+          </ol>
+          <div class="console-foot"><span>failure mode: <b id="runtime-failure-mode">—</b></span><span>parallelism: <b id="runtime-parallelism">—</b></span></div>
+        </aside>
+      </div>
+
+      <section class="system-metrics" aria-label="وضعیت داده و موتور">
+        <article><span>کاتالوگ فعال</span><strong id="metric-catalog">—</strong><small>SKU استانداردشده</small></article>
+        <article><span>شبکهٔ تأمین</span><strong id="metric-vendors">—</strong><small>منبع مستقل</small></article>
+        <article><span>ردیف قیمت</span><strong id="metric-prices">—</strong><small>پذیرفته و قرنطینه‌شده</small></article>
+        <article><span>عامل تخصصی</span><strong id="metric-agents">—</strong><small>در DAG قابل‌ردیابی</small></article>
+      </section>
+
+      <section class="product-pipeline" aria-labelledby="pipeline-title">
+        <div class="pipeline-heading"><div><p class="eyebrow">مسیر تصمیم</p><h2 id="pipeline-title">هر خروجی، یک ردّ محاسبه دارد.</h2></div><p>سامانه اول دادهٔ ناقص را از رتبه‌بندی کنار می‌گذارد، سپس همهٔ ترکیب‌های معتبر را با محدودیت‌های واقعی شما می‌سنجد.</p></div>
+        <ol class="pipeline-steps">
+          <li><span>۱</span><div><b>فهرست را ثبت کن</b><p>چند قلم، تعداد، بودجه و سقف تحویل را یک‌جا وارد کن.</p></div></li>
+          <li><span>۲</span><div><b>ابهام SKU را حل کن</b><p>مدل‌های مشابه بدون تأیید صریح وارد مقایسه نمی‌شوند.</p></div></li>
+          <li><span>۳</span><div><b>ترکیب‌ها را محاسبه کن</b><p>بسته، موجودی، ارسال و حداقل سفارش در جمع نهایی لحاظ می‌شوند.</p></div></li>
+          <li><span>۴</span><div><b>دلیل انتخاب را ببین</b><p>رتبه، اختلاف و منشأ هر پیشنهاد برای بازبینی باقی می‌ماند.</p></div></li>
+        </ol>
+      </section>
+
+      <div class="business-paths"><div><p class="eyebrow">آماده برای فرایند واقعی</p><h2>برای تیم خرید ساخته شده، نه فقط برای دمو.</h2><p>رابط از جست‌وجوی کالا تا درخواست چندقلمی، تطبیق صریح و مقایسهٔ ترکیب‌ها یک مسیر واحد دارد.</p></div><article><strong>کنترل کیفیت داده</strong><p>قیمت، موجودی یا زمان تحویل نامعلوم با مقدار پیش‌فرض پر نمی‌شود و در trace باقی می‌ماند.</p><span>unknown-preservation</span></article><article><strong>اجرای تکرارپذیر</strong><p>رتبه‌بندی قطعی است؛ با همان snapshot و محدودیت‌ها، همان نتیجه دوباره تولید می‌شود.</p><span>deterministic ranking</span></article></div>
     </section>
 
     <div id="workflow-view" hidden>
